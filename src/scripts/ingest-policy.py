@@ -7,19 +7,12 @@ from langchain_openai import OpenAIEmbeddings
 import chromadb
 import uuid
 
-# client = chromadb.Client()
-# client = chromadb.PersistentClient(path="./chroma_data")
-# client = chromadb.HttpClient(host="localhost", port=8000)
-# client = chromadb.CloudClient()
-
 def uploadExpensePolicy(filename):
     client = chromadb.CloudClient(
         api_key=os.getenv("CHROMA_API_KEY"),
         tenant=os.getenv("CHROMA_TENANT"),
         database='dev'
     )
-
-
 
     collection = client.get_or_create_collection(name="policies")
     try:
@@ -44,7 +37,9 @@ def main():
 
 
 if __name__ == "__main__":
-    response = uploadExpensePolicy("policy2.txt")
+    import sys
+    filename = sys.argv[1] if len(sys.argv) > 1 else "policy2.txt"
+    response = uploadExpensePolicy(filename)
     print(response)
 
 
