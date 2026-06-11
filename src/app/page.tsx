@@ -8,6 +8,7 @@ export default function Home() {
           <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
             Landing Page
           </h1>
+          <a href="/add-policy  "><u>Upload Expense Policy</u></a>
         </div>
         <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
           <a
