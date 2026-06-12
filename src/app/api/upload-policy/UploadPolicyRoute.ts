@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
-function runPython(filePath: string): Promise<string> {
+export function runPython(filePath: string): Promise<string> {
   return new Promise((resolve, reject) => {
     const scriptPath = join(process.cwd(), 'src', 'scripts', 'ingest-policy.py')
     const proc = spawn('python3', [scriptPath, filePath])
