@@ -33,7 +33,7 @@ import sys, json
 sys.path.insert(0, '${join(process.cwd(), 'src', 'scripts')}')
 from compliance import analyzeExpense
 expense = json.loads(sys.stdin.read())
-print(analyzeExpense(expense))
+print(json.dumps(analyzeExpense(expense)))
 `])
 
     let stdout = ''
