@@ -3,6 +3,10 @@
 /chroma_data
 /chroma
 
+# compiled python bytecode
+__pycache__/
+*.pyc
+
 # dependencies
 /node_modules
 /.pnp
