@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
 
     const raw = await runPython(tmpPath)
     const result = JSON.parse(raw)
-    return Response.json({ success: true, result })
+    return Response.json({ success: true, result, fileName: file.name })
   } catch (err) {
     return Response.json({ error: String(err) }, { status: 500 })
   } finally {

@@ -5,7 +5,7 @@ import { join } from 'path'
 export async function POST(request: NextRequest) {
   const expense = await request.json()
 
-  const required = ['amount', 'category', 'vendor', 'description', 'omer']
+  const required = ['amount', 'category', 'vendor', 'description', 'chargeToClient']
   for (const field of required) {
     if (expense[field] === undefined || expense[field] === '') {
       return Response.json({ error: `Missing required field: ${field}` }, { status: 400 })

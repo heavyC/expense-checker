@@ -61,14 +61,17 @@ function ConfidenceBar({ pct, barColor }: { pct: number; barColor: string }) {
   )
 }
 
-function ReceiptPanel({ receipt, fileName }: { receipt: ReceiptResult; fileName: string }) {
+function ReceiptPanel({ receipt, fileName, imageUrl }: { receipt: ReceiptResult; fileName: string; imageUrl: string }) {
   const pct = Math.round(receipt.accuracy * 100)
   const color = pct >= 80 ? 'bg-green-500' : pct >= 50 ? 'bg-yellow-400' : 'bg-red-500'
 
   return (
     <div className="mt-6 rounded-lg border border-zinc-200 dark:border-zinc-700 p-5 flex flex-col gap-3">
       <div className="flex items-center justify-between">
-        <h2 className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">Receipt Parsed</h2>
+        <div>
+          <h2 className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">Receipt Parsed</h2>
+          {fileName && <p className="text-xs text-zinc-400 dark:text-zinc-500 mt-0.5">{fileName}</p>}
+        </div>
         <div className="flex items-center gap-2 w-40">
           <ConfidenceBar pct={pct} barColor={color} />
           <span className="text-xs text-zinc-400">accuracy</span>
@@ -88,6 +91,13 @@ function ReceiptPanel({ receipt, fileName }: { receipt: ReceiptResult; fileName:
           </div>
         ))}
       </dl>
+      {imageUrl && (
+        <img
+          src={imageUrl}
+          alt="Uploaded receipt"
+          className="mt-2 w-full rounded object-contain"
+        />
+      )}
     </div>
   )
 }
@@ -150,6 +160,7 @@ export default function AddExpensePage() {
   const [receiptResult, setReceiptResult] = useState<ReceiptResult | null>(null)
   const [receiptError, setReceiptError] = useState('')
   const [receiptFileName, setReceiptFileName] = useState('')
+  const [receiptImageUrl, setReceiptImageUrl] = useState('')
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) {
@@ -168,6 +179,7 @@ export default function AddExpensePage() {
     setReceiptResult(null)
     setReceiptError('')
     setReceiptFileName(file.name)
+    setReceiptImageUrl(URL.createObjectURL(file))
 
     const fd = new FormData()
     fd.append('receipt', file)
@@ -178,6 +190,7 @@ export default function AddExpensePage() {
       if (res.ok) {
         const r: ReceiptResult = data.result
         setReceiptResult(r)
+        if (data.fileName) setReceiptFileName(data.fileName)
         setReceiptStatus('done')
         setForm({
           amount: r.amount.toFixed(2),
@@ -254,7 +267,7 @@ export default function AddExpensePage() {
           {receiptStatus === 'error' && (
             <p className="mt-2 text-xs text-red-600">{receiptError}</p>
           )}
-          {receiptResult && <ReceiptPanel receipt={receiptResult} fileName={receiptFileName} />}
+          {receiptResult && <ReceiptPanel receipt={receiptResult} fileName={receiptFileName} imageUrl={receiptImageUrl} />}
         </div>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-5 w-full max-w-sm">
