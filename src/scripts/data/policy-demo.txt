@@ -1,8 +1,73 @@
-Travel & Expense Policy Document
+Corporate Travel and Expense Policy
 
-- Meals: max $75/person for client meals, $25 for solo meals 
-- Travel: economy class required for flights under 4 hours 
-- Hotels: max $250/night in major cities, $175 elsewhere 
-- Receipts required for all expenses over $25 
-- Alcohol not reimbursable unless client entertainment 
-- Expenses must be submitted within 30 days
+General Principles
+- All business expenses must be reasonable, necessary, and directly related to company business.
+- Employees are expected to exercise the same care in incurring expenses as they would with their own funds.
+- All expenses must be submitted within 30 days of being incurred.
+- Expenses submitted more than 90 days after the transaction date will not be reimbursed.
+- All claims must be accompanied by itemized receipts for expenses over $25.
+- Falsifying expense reports is grounds for immediate termination.
+
+Air Travel
+- Employees must book economy class for flights under 6 hours.
+- Business class is permitted for international flights exceeding 6 hours in the air.
+- Flights must be booked at least 14 days in advance whenever possible.
+- Employees should select the lowest logical fare available within a 2-hour window of the preferred departure time.
+- Personal travel combined with business trips is allowed, but the company will only reimburse the cost equivalent to the business-only itinerary.
+- Baggage fees for one checked bag are reimbursable.
+- Airline rewards points, miles, or upgrades earned during business travel belong to the employee.
+
+Lodging
+- Hotel accommodations should not exceed $250 per night in major metropolitan areas and $175 per night in other locations.
+- Employees should book standard rooms; suite upgrades are not reimbursable unless required for client meetings.
+- Hotel incidentals such as room service, minibar charges, and movie rentals are not reimbursable.
+- Hotel internet fees required for business purposes are reimbursable with documentation.
+
+Ground Transportation
+- Rideshare services (Uber, Lyft) and taxis are reimbursable for business travel.
+- Rental cars should be mid-size or smaller unless transporting equipment or multiple employees.
+- Personal vehicle mileage is reimbursed at the current IRS standard mileage rate.
+- Parking and toll fees are reimbursable with receipts.
+- Public transportation is encouraged when practical and is fully reimbursable.
+
+Meals and Entertainment
+- Meal expenses while traveling are reimbursable up to $75 per day, including tips.
+- Itemized receipts are required for all meals over $25.
+- Alcohol is not reimbursable except when entertaining clients, and is limited to two drinks per person.
+- Client entertainment expenses require the names and companies of all attendees and a description of the business purpose.
+- Team meals and celebrations require manager pre-approval and are capped at $50 per person.
+- Tips should not exceed 20% of the pre-tax bill.
+
+Office and Equipment
+- Home office equipment purchases over $100 require manager approval prior to purchase.
+- Standard office supplies (pens, notebooks, etc.) are reimbursable without pre-approval up to $50 per month.
+- Software subscriptions and SaaS tools must be approved by IT and procurement before purchase.
+- Mobile phone reimbursement for business use is capped at $50 per month and requires submission of the phone bill.
+
+Approval and Submission
+- All expense reports must be submitted through the company expense management system.
+- Expenses under $25 do not require a receipt but must include a description of the expense.
+- Expenses between $25 and $500 require manager approval.
+- Expenses over $500 require both manager and finance director approval.
+- Expense reports must include a valid cost center and project code.
+- Reimbursements are processed within 10 business days of approval.
+
+Non-Reimbursable Expenses
+- Personal entertainment, including movies, gym memberships, and spa services.
+- Traffic violations, parking tickets, and other fines.
+- Personal travel insurance.
+- Clothing, except for required uniforms or safety equipment.
+- Childcare or pet care services.
+- Costs related to lost personal property.
+
+International Travel
+- Employees traveling internationally must notify the travel and security team at least 7 days before departure.
+- Currency conversion fees on company credit cards are reimbursable.
+- Visa fees required for business travel are reimbursable with documentation.
+- Per diem rates for international travel follow the published country-specific rates on the finance portal.
+
+Corporate Credit Cards
+- Corporate credit cards must only be used for approved business expenses.
+- Personal charges on a corporate card must be reimbursed to the company within 5 business days.
+- Lost or stolen corporate cards must be reported to the finance team within 24 hours.
+- Cardholders must reconcile all transactions monthly through the expense system.

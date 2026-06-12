@@ -13,7 +13,13 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const result = await runPython(expense)
+    const raw = await runPython(expense)
+    let result: unknown
+    try {
+      result = JSON.parse(raw)
+    } catch {
+      result = raw
+    }
     return Response.json({ success: true, result })
   } catch (err) {
     return Response.json({ error: String(err) }, { status: 500 })
@@ -22,7 +28,6 @@ export async function POST(request: NextRequest) {
 
 function runPython(expense: Record<string, unknown>): Promise<string> {
   return new Promise((resolve, reject) => {
-    const scriptPath = join(process.cwd(), 'src', 'scripts', 'compliance.py')
     const proc = spawn('python3', ['-c', `
 import sys, json
 sys.path.insert(0, '${join(process.cwd(), 'src', 'scripts')}')

@@ -13,10 +13,10 @@ interface Expense {
 const CATEGORIES = ['meals', 'travel', 'lodging', 'software', 'equipment', 'other']
 
 const empty: Expense = {
-  amount: '',
-  category: '',
-  vendor: '',
-  description: '',
+  amount: '85.00',
+  category: 'meals',
+  vendor: 'Chipotle',
+  description: 'team lunch',
   chargeToCustomer: false,
 }
 
