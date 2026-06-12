@@ -22,7 +22,7 @@ class Expense(TypedDict):
     category: str
     vendor: str
     description: str
-    chargeToCustomer: bool
+    chargeToClient: bool
 
 
 def _get_policy_excerpts(expense: dict) -> list[dict]:
@@ -66,7 +66,7 @@ EXPENSE:
   Category:          {expenseDict.get('category', 'unknown')}
   Vendor:            {expenseDict.get('vendor', 'unknown')}
   Description:       {expenseDict.get('description', '')}
-  Charge to Customer: {expenseDict.get('chargeToCustomer', False)}
+  Charge to Client:  {expenseDict.get('chargeToClient', False)}
 
 POLICY RULES (retrieved from company policy database):
 {policy_block}
@@ -123,7 +123,7 @@ if __name__ == "__main__":
         "category": "meals",
         "vendor": "Nobu Restaurant",
         "description": "client dinner with 3 guests",
-        "chargeToCustomer": False,
+        "chargeToClient": False,
     }
     result = analyzeExpense(sample)
     print(json.dumps(result, indent=2))

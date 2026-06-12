@@ -1,13 +1,13 @@
 'use client'
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 
 interface Expense {
   amount: string
   category: string
   vendor: string
   description: string
-  chargeToCustomer: boolean
+  chargeToClient: boolean
 }
 
 interface AnalysisResult {
@@ -18,14 +18,30 @@ interface AnalysisResult {
   policy_excerpts: string[]
 }
 
+interface ReceiptResult {
+  amount: number
+  category: string
+  vendor: string
+  description: string
+  chargeToClient: boolean
+  accuracy: number
+}
+
 const CATEGORIES = ['meals', 'travel', 'lodging', 'software', 'equipment', 'other']
 
+// const empty: Expense = {
+//   amount: '85.00',
+//   category: 'meals',
+//   vendor: 'Chipotle',
+//   description: 'team lunch',
+//   chargeToClient: false,
+// }
 const empty: Expense = {
-  amount: '85.00',
-  category: 'meals',
-  vendor: 'Chipotle',
-  description: 'team lunch',
-  chargeToCustomer: false,
+  amount: '',
+  category: '',
+  vendor: '',
+  description: '',
+  chargeToClient: false,
 }
 
 const verdictStyles: Record<AnalysisResult['verdict'], { bar: string; badge: string; label: string }> = {
@@ -34,14 +50,51 @@ const verdictStyles: Record<AnalysisResult['verdict'], { bar: string; badge: str
   NEEDS_REVIEW: { bar: 'bg-yellow-400', badge: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200', label: 'Needs Review' },
 }
 
+function ConfidenceBar({ pct, barColor }: { pct: number; barColor: string }) {
+  return (
+    <div className="flex flex-1 items-center gap-2">
+      <div className="relative h-2 flex-1 rounded-full bg-zinc-200 dark:bg-zinc-700">
+        <div className={`absolute left-0 top-0 h-2 rounded-full ${barColor}`} style={{ width: `${pct}%` }} />
+      </div>
+      <span className="text-xs text-zinc-500 dark:text-zinc-400 tabular-nums w-14 text-right">{pct}%</span>
+    </div>
+  )
+}
+
+function ReceiptPanel({ receipt, fileName }: { receipt: ReceiptResult; fileName: string }) {
+  const pct = Math.round(receipt.accuracy * 100)
+  const color = pct >= 80 ? 'bg-green-500' : pct >= 50 ? 'bg-yellow-400' : 'bg-red-500'
+
+  return (
+    <div className="mt-6 rounded-lg border border-zinc-200 dark:border-zinc-700 p-5 flex flex-col gap-3">
+      <div className="flex items-center justify-between">
+        <h2 className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">Receipt Parsed</h2>
+        <div className="flex items-center gap-2 w-40">
+          <ConfidenceBar pct={pct} barColor={color} />
+          <span className="text-xs text-zinc-400">accuracy</span>
+        </div>
+      </div>
+      <dl className="grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
+        {[
+          ['Vendor',    receipt.vendor],
+          ['Amount',    `$${receipt.amount.toFixed(2)}`],
+          ['Category',  receipt.category.charAt(0).toUpperCase() + receipt.category.slice(1)],
+          ['Description', receipt.description],
+          ['Charge to Client', receipt.chargeToClient ? 'Yes' : 'No'],
+        ].map(([label, value]) => (
+          <div key={label} className="contents">
+            <dt className="text-zinc-500 dark:text-zinc-400">{label}</dt>
+            <dd className="text-zinc-800 dark:text-zinc-200 font-medium">{value}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  )
+}
+
 function ResultPanel({ result }: { result: AnalysisResult }) {
   const style = verdictStyles[result.verdict] ?? verdictStyles.NEEDS_REVIEW
   const pct = Math.round(result.confidence * 100)
-  console.log(result)
-  console.log("-------------------")
-  console.log(result.policy_excerpts)
-  console.log("-------------------")
-  console.log(result.policy_citations)
 
   return (
     <div className="mt-10 flex flex-col gap-6">
@@ -49,15 +102,8 @@ function ResultPanel({ result }: { result: AnalysisResult }) {
         <span className={`rounded-full px-3 py-1 text-sm font-semibold ${style.badge}`}>
           {style.label}
         </span>
-        <div className="flex flex-1 items-center gap-2">
-          <div className="relative h-2 flex-1 rounded-full bg-zinc-200 dark:bg-zinc-700">
-            <div
-              className={`absolute left-0 top-0 h-2 rounded-full ${style.bar}`}
-              style={{ width: `${pct}%` }}
-            />
-          </div>
-          <span className="text-xs text-zinc-500 dark:text-zinc-400 tabular-nums">{pct}% confidence</span>
-        </div>
+        <ConfidenceBar pct={pct} barColor={style.bar} />
+        <span className="text-xs text-zinc-400">confidence</span>
       </div>
 
       <div>
@@ -80,13 +126,13 @@ function ResultPanel({ result }: { result: AnalysisResult }) {
       )}
 
       {result.policy_excerpts.length > 0 && (
-        <details className="group">
+        <details>
           <summary className="cursor-pointer text-sm font-semibold text-zinc-500 dark:text-zinc-400 select-none">
             Retrieved policy excerpts ({result.policy_excerpts.length})
           </summary>
           <ul className="mt-2 flex flex-col gap-1 border-l-2 border-zinc-200 dark:border-zinc-700 pl-4">
             {result.policy_excerpts.map((e, i) => (
-              <li key={i} className="text-xs text-zinc-500 dark:text-zinc-500 leading-relaxed">{e}</li>
+              <li key={i} className="text-xs text-zinc-500 leading-relaxed">{e}</li>
             ))}
           </ul>
         </details>
@@ -100,6 +146,11 @@ export default function AddExpensePage() {
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle')
   const [result, setResult] = useState<AnalysisResult | null>(null)
   const [errorMessage, setErrorMessage] = useState('')
+  const [receiptStatus, setReceiptStatus] = useState<'idle' | 'parsing' | 'done' | 'error'>('idle')
+  const [receiptResult, setReceiptResult] = useState<ReceiptResult | null>(null)
+  const [receiptError, setReceiptError] = useState('')
+  const [receiptFileName, setReceiptFileName] = useState('')
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) {
     const { name, value, type } = e.target
@@ -107,6 +158,44 @@ export default function AddExpensePage() {
       ...prev,
       [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : value,
     }))
+  }
+
+  async function handleReceiptUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    setReceiptStatus('parsing')
+    setReceiptResult(null)
+    setReceiptError('')
+    setReceiptFileName(file.name)
+
+    const fd = new FormData()
+    fd.append('receipt', file)
+
+    try {
+      const res = await fetch('/api/parse-receipt', { method: 'POST', body: fd })
+      const data = await res.json()
+      if (res.ok) {
+        const r: ReceiptResult = data.result
+        setReceiptResult(r)
+        setReceiptStatus('done')
+        setForm({
+          amount: r.amount.toFixed(2),
+          category: r.category,
+          vendor: r.vendor,
+          description: r.description,
+          chargeToClient: r.chargeToClient,
+        })
+      } else {
+        setReceiptStatus('error')
+        setReceiptError(data.error ?? 'Failed to parse receipt.')
+      }
+    } catch {
+      setReceiptStatus('error')
+      setReceiptError('Network error. Please try again.')
+    }
+
+    if (fileInputRef.current) fileInputRef.current.value = ''
   }
 
   async function handleSubmit(e: React.SyntheticEvent<HTMLFormElement>) {
@@ -147,6 +236,26 @@ export default function AddExpensePage() {
         <h1 className="text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50 mb-8">
           Add an Expense
         </h1>
+
+        {/* Receipt upload */}
+        <div className="mb-8 w-full max-w-sm">
+          <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">Upload a receipt to auto-fill</p>
+          <label className="flex cursor-pointer items-center justify-center gap-2 rounded border-2 border-dashed border-zinc-300 dark:border-zinc-600 px-4 py-5 text-sm text-zinc-500 dark:text-zinc-400 hover:border-zinc-400 dark:hover:border-zinc-500 transition-colors">
+            {receiptStatus === 'parsing' ? 'Parsing receipt…' : 'Choose image (JPEG, PNG, WebP)'}
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/jpeg,image/png,image/gif,image/webp"
+              className="sr-only"
+              onChange={handleReceiptUpload}
+              disabled={receiptStatus === 'parsing'}
+            />
+          </label>
+          {receiptStatus === 'error' && (
+            <p className="mt-2 text-xs text-red-600">{receiptError}</p>
+          )}
+          {receiptResult && <ReceiptPanel receipt={receiptResult} fileName={receiptFileName} />}
+        </div>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-5 w-full max-w-sm">
           <label className={labelClass}>
@@ -209,12 +318,12 @@ export default function AddExpensePage() {
           <label className="flex flex-row items-center gap-3 text-sm font-medium text-zinc-700 dark:text-zinc-300 cursor-pointer">
             <input
               type="checkbox"
-              name="chargeToCustomer"
-              checked={form.chargeToCustomer}
+              name="chargeToClient"
+              checked={form.chargeToClient}
               onChange={handleChange}
               className="h-4 w-4 rounded border-zinc-300 accent-black dark:accent-white"
             />
-            Charge to customer
+            Charge to Client
           </label>
 
           <button
