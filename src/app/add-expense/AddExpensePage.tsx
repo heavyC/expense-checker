@@ -161,6 +161,7 @@ export default function AddExpensePage() {
   const [receiptError, setReceiptError] = useState('')
   const [receiptFileName, setReceiptFileName] = useState('')
   const [receiptImageUrl, setReceiptImageUrl] = useState('')
+  const [expenseId, setExpenseId] = useState<number | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) {
@@ -191,6 +192,7 @@ export default function AddExpensePage() {
         const r: ReceiptResult = data.result
         setReceiptResult(r)
         if (data.fileName) setReceiptFileName(data.fileName)
+        if (data.expense_id) setExpenseId(data.expense_id)
         setReceiptStatus('done')
         setForm({
           amount: r.amount.toFixed(2),
@@ -217,7 +219,7 @@ export default function AddExpensePage() {
     setResult(null)
     setErrorMessage('')
 
-    const payload = { ...form, amount: parseFloat(form.amount) }
+    const payload = { ...form, amount: parseFloat(form.amount), expense_id: expenseId }
 
     try {
       const res = await fetch('/api/analyze-expense', {
