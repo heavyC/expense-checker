@@ -7,6 +7,8 @@ load_dotenv()
 
 import anthropic
 
+from prompts import RECEIPT_PARSING_PROMPT
+
 VALID_CATEGORIES = ['meals', 'travel', 'lodging', 'software', 'equipment', 'other']
 
 
@@ -27,23 +29,7 @@ def parse_receipt(image_path: str) -> dict:
 
     client = anthropic.Anthropic()
 
-    prompt = f"""You are a receipt parsing assistant. Examine the receipt image and extract expense information.
-
-Return ONLY a valid JSON object with this exact structure — no prose, no markdown fences:
-{{
-  "amount": <total amount as a number, e.g. 42.50>,
-  "category": "<one of: meals, travel, lodging, software, equipment, other>",
-  "vendor": "<business or merchant name>",
-  "description": "<brief description of what was purchased>",
-  "chargeToClient": false,
-  "accuracy": <float 0.0-1.0 reflecting how confident you are in the extracted data>
-}}
-
-Rules:
-- amount must be a number (no currency symbols)
-- category must be exactly one of the allowed values
-- If the receipt is unclear or missing data, use your best guess and lower the accuracy score
-- chargeToClient defaults to false unless the receipt clearly indicates a client billing"""
+    prompt = RECEIPT_PARSING_PROMPT
 
     response = client.messages.create(
         model="claude-opus-4-8",
