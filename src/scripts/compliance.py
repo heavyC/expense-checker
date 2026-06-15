@@ -8,6 +8,7 @@ import anthropic
 from typing import TypedDict
 
 from prompts import COMPLIANCE_ANALYSIS_PROMPT
+from chroma_utils import get_current_policy_version
 
 
 class ExpenseState(TypedDict):
@@ -42,7 +43,12 @@ def _get_policy_excerpts(expense: dict) -> list[dict]:
         f"for ${expense.get('amount', 0):.2f}"
     )
 
-    results = collection.query(query_texts=[query], n_results=8)
+    current_version = get_current_policy_version(collection)
+    results = collection.query(
+        query_texts=[query],
+        n_results=8,
+        where={"version": current_version} if current_version > 0 else None,
+    )
 
     excerpts = []
     if results and results["documents"]:

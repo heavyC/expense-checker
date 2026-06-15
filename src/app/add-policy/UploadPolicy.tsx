@@ -19,11 +19,11 @@ export default function UploadPolicy() {
     formData.append('file', file)
 
     try {
-      const res = await fetch('/api/ingest-policy', { method: 'POST', body: formData })
+      const res = await fetch('/api/upload-policy', { method: 'POST', body: formData })
       const data = await res.json()
       if (res.ok) {
         setStatus('success')
-        setMessage(data.message ?? 'Policy ingested successfully.')
+        setMessage(data.message ?? 'Policy uploaded successfully.')
         if (fileRef.current) fileRef.current.value = ''
       } else {
         setStatus('error')
@@ -40,7 +40,7 @@ export default function UploadPolicy() {
       <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
         <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left w-full">
           <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            Ingest New Expense Policy
+            Upload New Expense Policy
           </h1>
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full max-w-sm">

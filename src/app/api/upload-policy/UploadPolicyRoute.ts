@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
 
 export function runPython(filePath: string): Promise<string> {
   return new Promise((resolve, reject) => {
-    const scriptPath = join(process.cwd(), 'src', 'scripts', 'ingest-policy.py')
+    const scriptPath = join(process.cwd(), 'src', 'scripts', 'upload-policy.py')
     const proc = spawn('python3', [scriptPath, filePath])
 
     let stdout = ''
