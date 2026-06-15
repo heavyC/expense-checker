@@ -3,6 +3,7 @@ import { spawn } from 'child_process'
 import { join } from 'path'
 import { writeFile, unlink } from 'fs/promises'
 import { tmpdir } from 'os'
+import { executeSql } from '../../../lib/db'
 
 export async function POST(request: NextRequest) {
   const formData = await request.formData()
@@ -26,7 +27,15 @@ export async function POST(request: NextRequest) {
 
     const raw = await runPython(tmpPath)
     const result = JSON.parse(raw)
-    return Response.json({ success: true, result, fileName: file.name })
+
+    const [row] = await executeSql`
+      INSERT INTO expenses (amount, category, vendor, description, charge_to_client, receipt_accuracy)
+      VALUES (${result.amount}, ${result.category}, ${result.vendor},
+              ${result.description}, ${result.chargeToClient}, ${result.accuracy})
+      RETURNING id
+    `
+
+    return Response.json({ success: true, result, fileName: file.name, expense_id: row.id })
   } catch (err) {
     return Response.json({ error: String(err) }, { status: 500 })
   } finally {
