@@ -8,6 +8,7 @@ const NAV_LINKS = [
   { href: '/add-expense', label: 'Add Expense' },
   { href: '/expenses',    label: 'Expense Reports' },
   { href: '/add-policy',  label: 'Upload Policy' },
+  { href: '/policies',    label: 'Policy Docs' },
 ]
 
 export default function Header() {
