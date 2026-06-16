@@ -7,6 +7,7 @@ const NAV_LINKS = [
   { href: '/',            label: 'Home' },
   { href: '/add-expense', label: 'Add Expense' },
   { href: '/expenses',    label: 'Expense Reports' },
+  { href: '/review',      label: 'Review' },
   { href: '/add-policy',  label: 'Upload Policy' },
   { href: '/policies',    label: 'Policy Docs' },
 ]

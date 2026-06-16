@@ -156,6 +156,7 @@ export default function AddExpensePage() {
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle')
   const [result, setResult] = useState<AnalysisResult | null>(null)
   const [errorMessage, setErrorMessage] = useState('')
+  const [savedExpenseId, setSavedExpenseId] = useState<number | null>(null)
   const [receiptStatus, setReceiptStatus] = useState<'idle' | 'parsing' | 'done' | 'error'>('idle')
   const [receiptResult, setReceiptResult] = useState<ReceiptResult | null>(null)
   const [receiptError, setReceiptError] = useState('')
@@ -222,7 +223,7 @@ export default function AddExpensePage() {
     const payload = { ...form, amount: parseFloat(form.amount), expense_id: expenseId }
 
     try {
-      const res = await fetch('/api/analyze-expense', {
+      const res = await fetch('/api/save-expense', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
@@ -230,7 +231,11 @@ export default function AddExpensePage() {
       const data = await res.json()
       if (res.ok) {
         setStatus('success')
-        setResult(data.result)
+        setSavedExpenseId(data.expense_id)
+        setForm(empty)
+        setExpenseId(null)
+        setReceiptResult(null)
+        setReceiptStatus('idle')
       } else {
         setStatus('error')
         setErrorMessage(data.error ?? 'Something went wrong.')
@@ -346,13 +351,25 @@ export default function AddExpensePage() {
             disabled={status === 'submitting'}
             className="rounded bg-black text-white py-2 px-4 text-sm font-semibold hover:bg-zinc-800 disabled:opacity-50 dark:bg-white dark:text-black dark:hover:bg-zinc-200"
           >
-            {status === 'submitting' ? 'Analyzing…' : 'Submit Expense'}
+            {status === 'submitting' ? 'Saving…' : 'Submit Expense'}
           </button>
 
           {status === 'error' && (
             <p className="text-sm text-red-600">{errorMessage}</p>
           )}
         </form>
+
+        {status === 'success' && savedExpenseId && (
+          <div className="mt-10 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 flex flex-col gap-2">
+            <span className="rounded-full self-start px-3 py-1 text-sm font-semibold bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+              Ready for Review
+            </span>
+            <p className="text-sm text-zinc-600 dark:text-zinc-400">
+              Expense #{savedExpenseId} has been saved and is waiting for compliance review.
+              Visit the <a href="/review" className="underline hover:text-black dark:hover:text-white">Review page</a> to submit it to the compliance agent.
+            </p>
+          </div>
+        )}
 
         {result && <ResultPanel result={result} />}
       </main>

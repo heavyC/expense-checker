@@ -104,9 +104,14 @@ export default async function ExpensesPage() {
                       analyzedAt={row.analyzed_at}
                     />
                   ) : (
-                    <p className="text-xs text-zinc-400 border-t border-zinc-100 dark:border-zinc-800 pt-3">
-                      No analysis yet
-                    </p>
+                    <div className="border-t border-zinc-100 dark:border-zinc-800 pt-3 flex items-center gap-3">
+                      <span className="rounded-full px-3 py-0.5 text-xs font-semibold bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                        Ready for Review
+                      </span>
+                      <a href="/review" className="text-xs text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-colors">
+                        Go to Review →
+                      </a>
+                    </div>
                   )}
                 </div>
               )
