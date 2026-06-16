@@ -1,4 +1,5 @@
 import { executeSql } from '../../lib/db'
+import ExpandableAnalysis from './ExpandableAnalysis'
 
 const verdictStyles = {
   APPROVED:     { badge: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',     label: 'Approved' },
@@ -93,54 +94,15 @@ export default async function ExpensesPage() {
 
                   {/* Analysis */}
                   {style && row.verdict ? (
-                    <div className="border-t border-zinc-100 dark:border-zinc-800 pt-4 flex flex-col gap-3">
-                      <div className="flex items-center gap-3">
-                        <span className={`rounded-full px-3 py-0.5 text-xs font-semibold ${style.badge}`}>
-                          {style.label}
-                        </span>
-                        {confidencePct !== null && (
-                          <span className="text-xs text-zinc-400">{confidencePct}% confidence</span>
-                        )}
-                        {row.analyzed_at && (
-                          <span className="text-xs text-zinc-400 ml-auto">
-                            Analyzed {new Date(row.analyzed_at).toLocaleString()}
-                          </span>
-                        )}
-                      </div>
-
-                      {row.reasoning && (
-                        <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
-                          {row.reasoning}
-                        </p>
-                      )}
-
-                      {row.policy_citations && row.policy_citations.length > 0 && (
-                        <div>
-                          <p className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 mb-1">Policy Citations</p>
-                          <ul className="flex flex-col gap-1">
-                            {row.policy_citations.map((citation: string, index: number) => (
-                              <li key={index} className="flex gap-2 text-xs text-zinc-600 dark:text-zinc-400">
-                                <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-zinc-400" />
-                                {citation}
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-
-                      {row.policy_excerpts && row.policy_excerpts.length > 0 && (
-                        <details className="text-xs">
-                          <summary className="cursor-pointer font-semibold text-zinc-400 select-none">
-                            Policy excerpts used ({row.policy_excerpts.length})
-                          </summary>
-                          <ul className="mt-2 flex flex-col gap-1 border-l-2 border-zinc-200 dark:border-zinc-700 pl-3">
-                            {row.policy_excerpts.map((excerpt: string, index: number) => (
-                              <li key={index} className="text-zinc-500 leading-relaxed">{excerpt}</li>
-                            ))}
-                          </ul>
-                        </details>
-                      )}
-                    </div>
+                    <ExpandableAnalysis
+                      reasoning={row.reasoning}
+                      policyCitations={row.policy_citations}
+                      policyExcerpts={row.policy_excerpts}
+                      verdictBadge={style.badge}
+                      verdictLabel={style.label}
+                      confidencePct={confidencePct}
+                      analyzedAt={row.analyzed_at}
+                    />
                   ) : (
                     <p className="text-xs text-zinc-400 border-t border-zinc-100 dark:border-zinc-800 pt-3">
                       No analysis yet

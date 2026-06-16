@@ -1,0 +1,588 @@
+{
+    "services": [
+        {
+            "serviceArn": "arn:aws:ecs:us-west-2:831869585621:service/manewax-cluster/manewax-service",
+            "serviceName": "manewax-service",
+            "clusterArn": "arn:aws:ecs:us-west-2:831869585621:cluster/manewax-cluster",
+            "loadBalancers": [],
+            "serviceRegistries": [],
+            "status": "ACTIVE",
+            "desiredCount": 1,
+            "runningCount": 2,
+            "pendingCount": 0,
+            "launchType": "FARGATE",
+            "platformVersion": "LATEST",
+            "platformFamily": "Linux",
+            "taskDefinition": "arn:aws:ecs:us-west-2:831869585621:task-definition/manewax-web:7",
+            "deploymentConfiguration": {
+                "deploymentCircuitBreaker": {
+                    "enable": false,
+                    "rollback": false
+                },
+                "maximumPercent": 200,
+                "minimumHealthyPercent": 100,
+                "strategy": "ROLLING",
+                "bakeTimeInMinutes": 0
+            },
+            "deployments": [
+                {
+                    "id": "ecs-svc/8724628246009596341",
+                    "status": "PRIMARY",
+                    "taskDefinition": "arn:aws:ecs:us-west-2:831869585621:task-definition/manewax-web:7",
+                    "desiredCount": 1,
+                    "pendingCount": 0,
+                    "runningCount": 2,
+                    "failedTasks": 4567,
+                    "createdAt": "2026-06-05T13:01:50.774000-07:00",
+                    "updatedAt": "2026-06-16T14:55:11.037000-07:00",
+                    "launchType": "FARGATE",
+                    "platformVersion": "1.4.0",
+                    "platformFamily": "Linux",
+                    "networkConfiguration": {
+                        "awsvpcConfiguration": {
+                            "subnets": [
+                                "subnet-0006f4f0f88ac2641",
+                                "subnet-06f82c25c0af110db"
+                            ],
+                            "securityGroups": [
+                                "sg-0872976cf45c579e3"
+                            ],
+                            "assignPublicIp": "ENABLED"
+                        }
+                    },
+                    "rolloutState": "IN_PROGRESS",
+                    "rolloutStateReason": "ECS deployment ecs-svc/8724628246009596341 in progress."
+                }
+            ],
+            "roleArn": "arn:aws:iam::831869585621:role/aws-service-role/ecs.amazonaws.com/AWSServiceRoleForECS",
+            "events": [
+                {
+                    "id": "d4f9b028-f836-4f59-90b1-b3b927c20331",
+                    "createdAt": "2026-06-16T15:34:40.306000-07:00",
+                    "message": "(service manewax-service) has started 1 tasks: (task 0df005b7fcab4d2d953c391e9d24dad0). Amazon ECS replaced 1 tasks due to an unhealthy status."
+                },
+                {
+                    "id": "14f99144-4067-44e9-a3a5-1445cfc20de4",
+                    "createdAt": "2026-06-16T15:34:00.441000-07:00",
+                    "message": "(service manewax-service) has stopped 1 running tasks: (task 4a0c3f14159c482ca2091e3433488fbc)."
+                },
+                {
+                    "id": "1ad3552c-8b2f-4539-aa38-6486d06f6312",
+                    "createdAt": "2026-06-16T15:34:00.440000-07:00",
+                    "message": "(service manewax-service) (task 4a0c3f14159c482ca2091e3433488fbc) failed container health checks."
+                },
+                {
+                    "id": "8e48ba60-0704-4dbf-8d60-786fa0aa4239",
+                    "createdAt": "2026-06-16T15:31:30.784000-07:00",
+                    "message": "(service manewax-service) has started 1 tasks: (task 4a0c3f14159c482ca2091e3433488fbc). Amazon ECS replaced 1 tasks due to an unhealthy status."
+                },
+                {
+                    "id": "4093c20d-ded4-4221-b83a-a55254b605b5",
+                    "createdAt": "2026-06-16T15:30:42.717000-07:00",
+                    "message": "(service manewax-service) has stopped 1 running tasks: (task ade296a1d71a49ec96f3df0f8e170c58)."
+                },
+                {
+                    "id": "dc8bcecc-dbf2-4947-ad56-73c70827b1e5",
+                    "createdAt": "2026-06-16T15:30:42.716000-07:00",
+                    "message": "(service manewax-service) (task ade296a1d71a49ec96f3df0f8e170c58) failed container health checks."
+                },
+                {
+                    "id": "a450f608-2e1a-44ed-af48-e50f883fe8c3",
+                    "createdAt": "2026-06-16T15:27:49.458000-07:00",
+                    "message": "(service manewax-service) has started 1 tasks: (task ade296a1d71a49ec96f3df0f8e170c58). Amazon ECS replaced 1 tasks due to an unhealthy status."
+                },
+                {
+                    "id": "69b78425-8b12-47ac-9d7c-2cdc59f60739",
+                    "createdAt": "2026-06-16T15:27:02.868000-07:00",
+                    "message": "(service manewax-service) has stopped 1 running tasks: (task 29d68b83585446bbb0970ac4265e1423)."
+                },
+                {
+                    "id": "e4340ffe-b007-41fa-b6f6-0019f6c25875",
+                    "createdAt": "2026-06-16T15:27:02.867000-07:00",
+                    "message": "(service manewax-service) (task 29d68b83585446bbb0970ac4265e1423) failed container health checks."
+                },
+                {
+                    "id": "bcb21a12-0e92-4644-a118-69cbc5628b69",
+                    "createdAt": "2026-06-16T15:24:33.513000-07:00",
+                    "message": "(service manewax-service) has started 1 tasks: (task 29d68b83585446bbb0970ac4265e1423). Amazon ECS replaced 1 tasks due to an unhealthy status."
+                },
+                {
+                    "id": "85efc029-7063-4496-90c6-a19f90b5cd9f",
+                    "createdAt": "2026-06-16T15:23:46.127000-07:00",
+                    "message": "(service manewax-service) has stopped 1 running tasks: (task 8523ecfad35b4899ace8d995bde00f91)."
+                },
+                {
+                    "id": "b366f6e7-1b57-42b5-ba55-f668bd084e79",
+                    "createdAt": "2026-06-16T15:23:46.126000-07:00",
+                    "message": "(service manewax-service) (task 8523ecfad35b4899ace8d995bde00f91) failed container health checks."
+                },
+                {
+                    "id": "8f70922b-0233-456d-961e-74fed0141df2",
+                    "createdAt": "2026-06-16T15:21:21.993000-07:00",
+                    "message": "(service manewax-service) has started 1 tasks: (task 8b5d884b7e884d54b155d164dbf1e0e8). Amazon ECS replaced 1 tasks due to an unhealthy status."
+                },
+                {
+                    "id": "9ea9618e-46bd-429b-a9b9-1ceb0ae3843a",
+                    "createdAt": "2026-06-16T15:20:33.754000-07:00",
+                    "message": "(service manewax-service) has stopped 1 running tasks: (task 7b7e2bed15d64df4abd15b1c4564e182)."
+                },
+                {
+                    "id": "76f7f889-4e19-4615-9d49-c0d2fe0a904b",
+                    "createdAt": "2026-06-16T15:20:33.753000-07:00",
+                    "message": "(service manewax-service) (task 7b7e2bed15d64df4abd15b1c4564e182) failed container health checks."
+                },
+                {
+                    "id": "dfa3cd4c-504b-4199-947c-3e2a3f3e056d",
+                    "createdAt": "2026-06-16T15:17:28.669000-07:00",
+                    "message": "(service manewax-service) has started 1 tasks: (task 8523ecfad35b4899ace8d995bde00f91). Amazon ECS replaced 1 tasks due to an unhealthy status."
+                },
+                {
+                    "id": "7bb1d5aa-9c76-4e33-87a5-7ed2e815ecff",
+                    "createdAt": "2026-06-16T15:16:49.358000-07:00",
+                    "message": "(service manewax-service) has stopped 1 running tasks: (task ceb22f7b93184ac3a2135fd38cdac21a)."
+                },
+                {
+                    "id": "2ca24160-99c3-4e38-be41-9ad6124eada0",
+                    "createdAt": "2026-06-16T15:16:49.357000-07:00",
+                    "message": "(service manewax-service) (task ceb22f7b93184ac3a2135fd38cdac21a) failed container health checks."
+                },
+                {
+                    "id": "160cf98e-1604-4aec-9684-fbc9f6b284c5",
+                    "createdAt": "2026-06-16T15:13:55.289000-07:00",
+                    "message": "(service manewax-service) has started 1 tasks: (task ceb22f7b93184ac3a2135fd38cdac21a). Amazon ECS replaced 1 tasks due to an unhealthy status."
+                },
+                {
+                    "id": "d93a2aa5-c3b4-4812-a129-7b030250be49",
+                    "createdAt": "2026-06-16T15:13:14.857000-07:00",
+                    "message": "(service manewax-service) has stopped 1 running tasks: (task 32126ba14df04ca9b46dfe3baa1d38be)."
+                },
+                {
+                    "id": "18431820-a674-49ab-8619-29aab7b330bd",
+                    "createdAt": "2026-06-16T15:13:14.856000-07:00",
+                    "message": "(service manewax-service) (task 32126ba14df04ca9b46dfe3baa1d38be) failed container health checks."
+                },
+                {
+                    "id": "1937e047-d1c0-49e2-a33a-87eaefd09a34",
+                    "createdAt": "2026-06-16T15:10:02.349000-07:00",
+                    "message": "(service manewax-service) has started 1 tasks: (task 7b7e2bed15d64df4abd15b1c4564e182). Amazon ECS replaced 1 tasks due to an unhealthy status."
+                },
+                {
+                    "id": "968e3323-980f-43f5-870e-d2373d6a717d",
+                    "createdAt": "2026-06-16T15:09:22.142000-07:00",
+                    "message": "(service manewax-service) has stopped 1 running tasks: (task 4c24797e5f884b99aefd1a63faea6559)."
+                },
+                {
+                    "id": "c32a51d9-11a0-4b0f-ae7b-d6f1a06732a2",
+                    "createdAt": "2026-06-16T15:09:22.141000-07:00",
+                    "message": "(service manewax-service) (task 4c24797e5f884b99aefd1a63faea6559) failed container health checks."
+                },
+                {
+                    "id": "08924082-c65a-4f0d-8aed-acf5f47ac347",
+                    "createdAt": "2026-06-16T15:06:11.553000-07:00",
+                    "message": "(service manewax-service) has started 1 tasks: (task 4c24797e5f884b99aefd1a63faea6559). Amazon ECS replaced 1 tasks due to an unhealthy status."
+                },
+                {
+                    "id": "2d5a7c8d-d264-4b2f-bad5-1537168c7ec9",
+                    "createdAt": "2026-06-16T15:05:31.500000-07:00",
+                    "message": "(service manewax-service) has stopped 1 running tasks: (task 70a68f6ec74d42abac6a653f61aa77f7)."
+                },
+                {
+                    "id": "d8fe09b9-38f6-470d-a4d1-3acd2e422d0a",
+                    "createdAt": "2026-06-16T15:05:31.499000-07:00",
+                    "message": "(service manewax-service) (task 70a68f6ec74d42abac6a653f61aa77f7) failed container health checks."
+                },
+                {
+                    "id": "98b5a584-7d70-4eda-8e80-2a45ecef8102",
+                    "createdAt": "2026-06-16T15:02:39.895000-07:00",
+                    "message": "(service manewax-service) has started 1 tasks: (task 70a68f6ec74d42abac6a653f61aa77f7). Amazon ECS replaced 1 tasks due to an unhealthy status."
+                },
+                {
+                    "id": "30014833-b654-4b48-805d-375dbb2e8e28",
+                    "createdAt": "2026-06-16T15:02:01.270000-07:00",
+                    "message": "(service manewax-service) has stopped 1 running tasks: (task 58dc8c448cc749059a6d93fc49fc559a)."
+                },
+                {
+                    "id": "5eba5794-ba90-490c-9867-a6ada69bb7fc",
+                    "createdAt": "2026-06-16T15:02:01.269000-07:00",
+                    "message": "(service manewax-service) (task 58dc8c448cc749059a6d93fc49fc559a) failed container health checks."
+                },
+                {
+                    "id": "42dcbfa5-7644-44b2-abeb-a4a4bcc02b1d",
+                    "createdAt": "2026-06-16T14:58:56.290000-07:00",
+                    "message": "(service manewax-service) has started 1 tasks: (task 32126ba14df04ca9b46dfe3baa1d38be). Amazon ECS replaced 1 tasks due to an unhealthy status."
+                },
+                {
+                    "id": "4d4402f8-b12f-422a-b485-c79554b064df",
+                    "createdAt": "2026-06-16T14:58:18.181000-07:00",
+                    "message": "(service manewax-service) has stopped 1 running tasks: (task 2d0cffe5511a4293a6af94352b82aa54)."
+                },
+                {
+                    "id": "8b10556b-0eb3-46b8-ac0c-9d992e8e86e2",
+                    "createdAt": "2026-06-16T14:58:18.180000-07:00",
+                    "message": "(service manewax-service) (task 2d0cffe5511a4293a6af94352b82aa54) failed container health checks."
+                },
+                {
+                    "id": "71b757f1-5130-4268-8f5c-5e4301c7ad33",
+                    "createdAt": "2026-06-16T14:55:24.788000-07:00",
+                    "message": "(service manewax-service) has started 1 tasks: (task 2d0cffe5511a4293a6af94352b82aa54). Amazon ECS replaced 1 tasks due to an unhealthy status."
+                },
+                {
+                    "id": "1c65e7bc-b5b3-42e0-a357-188f5b1a8a40",
+                    "createdAt": "2026-06-16T14:54:44.129000-07:00",
+                    "message": "(service manewax-service) has stopped 1 running tasks: (task 81117feabc7b44988faa9b7e3b4afdd3)."
+                },
+                {
+                    "id": "c7c11a79-db30-4017-b887-5be7a03ec308",
+                    "createdAt": "2026-06-16T14:54:44.128000-07:00",
+                    "message": "(service manewax-service) (task 81117feabc7b44988faa9b7e3b4afdd3) failed container health checks."
+                },
+                {
+                    "id": "59168556-2fb5-444b-8dc8-f2b1eb0cf39e",
+                    "createdAt": "2026-06-16T14:52:16.409000-07:00",
+                    "message": "(service manewax-service) has started 1 tasks: (task 81117feabc7b44988faa9b7e3b4afdd3). Amazon ECS replaced 1 tasks due to an unhealthy status."
+                },
+                {
+                    "id": "11532a19-b99d-4c47-9571-02e2ba414339",
+                    "createdAt": "2026-06-16T14:51:35.666000-07:00",
+                    "message": "(service manewax-service) has stopped 1 running tasks: (task c6c84c6dfcf14c23ad35b4b0e10dc2f2)."
+                },
+                {
+                    "id": "673df2b3-5210-449c-989a-325685ad01ed",
+                    "createdAt": "2026-06-16T14:51:35.665000-07:00",
+                    "message": "(service manewax-service) (task c6c84c6dfcf14c23ad35b4b0e10dc2f2) failed container health checks."
+                },
+                {
+                    "id": "d4488a77-b997-4d6b-a4b7-7f616a367318",
+                    "createdAt": "2026-06-16T14:48:22.720000-07:00",
+                    "message": "(service manewax-service) has started 1 tasks: (task c6c84c6dfcf14c23ad35b4b0e10dc2f2). Amazon ECS replaced 1 tasks due to an unhealthy status."
+                },
+                {
+                    "id": "3390ed22-fdbb-4249-8d69-70b60c6f062c",
+                    "createdAt": "2026-06-16T14:47:43.567000-07:00",
+                    "message": "(service manewax-service) has stopped 1 running tasks: (task c89eb19016164434ad1619c528df0108)."
+                },
+                {
+                    "id": "ebb39127-be9e-4049-b6e0-9319a8d75f3b",
+                    "createdAt": "2026-06-16T14:47:43.566000-07:00",
+                    "message": "(service manewax-service) (task c89eb19016164434ad1619c528df0108) failed container health checks."
+                },
+                {
+                    "id": "d9cea4b5-7728-44ab-a251-347ad7569f4f",
+                    "createdAt": "2026-06-16T14:44:51.220000-07:00",
+                    "message": "(service manewax-service) has started 1 tasks: (task 58dc8c448cc749059a6d93fc49fc559a). Amazon ECS replaced 1 tasks due to an unhealthy status."
+                },
+                {
+                    "id": "e03c2f4c-d8a2-4dd2-b044-918a40a0676d",
+                    "createdAt": "2026-06-16T14:44:13.398000-07:00",
+                    "message": "(service manewax-service) has stopped 1 running tasks: (task e0e9e5bf15dd45e8a51614f402d02785)."
+                },
+                {
+                    "id": "0a4a668a-4e4b-40bd-82a1-031f0217b991",
+                    "createdAt": "2026-06-16T14:44:13.397000-07:00",
+                    "message": "(service manewax-service) (task e0e9e5bf15dd45e8a51614f402d02785) failed container health checks."
+                },
+                {
+                    "id": "706da0d4-220d-437a-bbbb-5ec9c6dc665c",
+                    "createdAt": "2026-06-16T14:41:22.099000-07:00",
+                    "message": "(service manewax-service) has started 1 tasks: (task c89eb19016164434ad1619c528df0108). Amazon ECS replaced 1 tasks due to an unhealthy status."
+                },
+                {
+                    "id": "41e6d575-8f2c-4214-9ea7-4d5ca3cb0dc6",
+                    "createdAt": "2026-06-16T14:40:34.268000-07:00",
+                    "message": "(service manewax-service) has stopped 1 running tasks: (task 8700c17bc6ab469186237c857d529593)."
+                },
+                {
+                    "id": "9028f342-8d57-4094-ac03-16bc82275ed2",
+                    "createdAt": "2026-06-16T14:40:34.267000-07:00",
+                    "message": "(service manewax-service) (task 8700c17bc6ab469186237c857d529593) failed container health checks."
+                },
+                {
+                    "id": "1c343501-d34d-4019-b70f-3ccc56dcd4a7",
+                    "createdAt": "2026-06-16T14:38:05.236000-07:00",
+                    "message": "(service manewax-service) has started 1 tasks: (task 8700c17bc6ab469186237c857d529593). Amazon ECS replaced 1 tasks due to an unhealthy status."
+                },
+                {
+                    "id": "4dce4ffe-d512-46c0-87ea-0d71d1e9fd45",
+                    "createdAt": "2026-06-16T14:37:24.429000-07:00",
+                    "message": "(service manewax-service) has stopped 1 running tasks: (task a06980905c564b7da1abeeab7d090050)."
+                },
+                {
+                    "id": "6df55b92-36dd-468d-ad9c-b2b6e091ec40",
+                    "createdAt": "2026-06-16T14:37:24.428000-07:00",
+                    "message": "(service manewax-service) (task a06980905c564b7da1abeeab7d090050) failed container health checks."
+                },
+                {
+                    "id": "1a7b7923-c810-4585-88ca-352c2709ee7f",
+                    "createdAt": "2026-06-16T14:34:30.663000-07:00",
+                    "message": "(service manewax-service) has started 1 tasks: (task a06980905c564b7da1abeeab7d090050). Amazon ECS replaced 1 tasks due to an unhealthy status."
+                },
+                {
+                    "id": "8f5c9195-b067-498c-aa4a-c05aab78beb1",
+                    "createdAt": "2026-06-16T14:33:50.070000-07:00",
+                    "message": "(service manewax-service) has stopped 1 running tasks: (task 34565247d5f541f98f4fc700e8b8ff82)."
+                },
+                {
+                    "id": "388a0a22-206c-4308-915c-c4760dfd2f42",
+                    "createdAt": "2026-06-16T14:33:50.069000-07:00",
+                    "message": "(service manewax-service) (task 34565247d5f541f98f4fc700e8b8ff82) failed container health checks."
+                },
+                {
+                    "id": "537670fc-a211-46ad-bdda-422768f53fef",
+                    "createdAt": "2026-06-16T14:31:23.509000-07:00",
+                    "message": "(service manewax-service) has started 1 tasks: (task 34565247d5f541f98f4fc700e8b8ff82). Amazon ECS replaced 1 tasks due to an unhealthy status."
+                },
+                {
+                    "id": "7ddc86f1-2c5c-4aac-81f1-74a15275051c",
+                    "createdAt": "2026-06-16T14:30:44.277000-07:00",
+                    "message": "(service manewax-service) has stopped 1 running tasks: (task 26b191fe2f674f368bcfddb847fb9596)."
+                },
+                {
+                    "id": "467c2253-efac-4231-bbb4-9d35f5fa0534",
+                    "createdAt": "2026-06-16T14:30:44.276000-07:00",
+                    "message": "(service manewax-service) (task 26b191fe2f674f368bcfddb847fb9596) failed container health checks."
+                },
+                {
+                    "id": "07b0dde2-6997-4065-9537-b3b50ddfd877",
+                    "createdAt": "2026-06-16T14:28:11.850000-07:00",
+                    "message": "(service manewax-service) has started 1 tasks: (task 26b191fe2f674f368bcfddb847fb9596). Amazon ECS replaced 1 tasks due to an unhealthy status."
+                },
+                {
+                    "id": "3de090b6-2d32-4d0c-8a2e-ebc6f651ce71",
+                    "createdAt": "2026-06-16T14:27:34.179000-07:00",
+                    "message": "(service manewax-service) has stopped 1 running tasks: (task 5a5dc2dd1b3c4a12945f2a0db1be3d92)."
+                },
+                {
+                    "id": "c640ed71-dfae-4a7b-a7b7-8a533a58b66e",
+                    "createdAt": "2026-06-16T14:27:34.178000-07:00",
+                    "message": "(service manewax-service) (task 5a5dc2dd1b3c4a12945f2a0db1be3d92) failed container health checks."
+                },
+                {
+                    "id": "ab79c6fd-550f-4b7f-8566-4452b5f4b951",
+                    "createdAt": "2026-06-16T14:24:23.956000-07:00",
+                    "message": "(service manewax-service) has started 1 tasks: (task 5a5dc2dd1b3c4a12945f2a0db1be3d92). Amazon ECS replaced 1 tasks due to an unhealthy status."
+                },
+                {
+                    "id": "44aa9818-1f79-4d95-b85d-5dc23a56dc2e",
+                    "createdAt": "2026-06-16T14:23:47.373000-07:00",
+                    "message": "(service manewax-service) has stopped 1 running tasks: (task 054d81d46111420a85d6c63f2a057555)."
+                },
+                {
+                    "id": "14eb09a5-9395-4175-bac6-c7f454de1975",
+                    "createdAt": "2026-06-16T14:23:47.372000-07:00",
+                    "message": "(service manewax-service) (task 054d81d46111420a85d6c63f2a057555) failed container health checks."
+                },
+                {
+                    "id": "ec8ab3da-28e3-4558-9c2a-03f2ae3fbddb",
+                    "createdAt": "2026-06-16T14:21:00.282000-07:00",
+                    "message": "(service manewax-service) has started 1 tasks: (task 054d81d46111420a85d6c63f2a057555). Amazon ECS replaced 1 tasks due to an unhealthy status."
+                },
+                {
+                    "id": "14265e7c-55b2-4380-87b5-ee364b7ed0b6",
+                    "createdAt": "2026-06-16T14:20:20.136000-07:00",
+                    "message": "(service manewax-service) has stopped 1 running tasks: (task 2972028bb8844570847669729553e2d5)."
+                },
+                {
+                    "id": "cd423e9e-3520-4636-86dd-b33307eb6d23",
+                    "createdAt": "2026-06-16T14:20:20.135000-07:00",
+                    "message": "(service manewax-service) (task 2972028bb8844570847669729553e2d5) failed container health checks."
+                },
+                {
+                    "id": "fc29a732-1855-43fd-b83c-40570653cb28",
+                    "createdAt": "2026-06-16T14:17:31.222000-07:00",
+                    "message": "(service manewax-service) has started 1 tasks: (task e0e9e5bf15dd45e8a51614f402d02785). Amazon ECS replaced 1 tasks due to an unhealthy status."
+                },
+                {
+                    "id": "63d2495e-e89e-40a5-a140-86d5716517c5",
+                    "createdAt": "2026-06-16T14:16:41.755000-07:00",
+                    "message": "(service manewax-service) has stopped 1 running tasks: (task 260901c401b0470d8269f713229da005)."
+                },
+                {
+                    "id": "a5640bfc-c466-49d6-83c3-69f640106511",
+                    "createdAt": "2026-06-16T14:16:41.754000-07:00",
+                    "message": "(service manewax-service) (task 260901c401b0470d8269f713229da005) failed container health checks."
+                },
+                {
+                    "id": "b42c4cbf-7a1a-4158-92b5-5f6aec796f4b",
+                    "createdAt": "2026-06-16T14:14:13.278000-07:00",
+                    "message": "(service manewax-service) has started 1 tasks: (task 260901c401b0470d8269f713229da005). Amazon ECS replaced 1 tasks due to an unhealthy status."
+                },
+                {
+                    "id": "6a4906ba-07b6-44a4-94a6-ae744354c750",
+                    "createdAt": "2026-06-16T14:13:14.415000-07:00",
+                    "message": "(service manewax-service) has stopped 1 running tasks: (task 9ea7d36cdb634e87b334ec73a8ebc94a)."
+                },
+                {
+                    "id": "89651ded-5e23-443a-a55d-36b817ce71d5",
+                    "createdAt": "2026-06-16T14:13:14.414000-07:00",
+                    "message": "(service manewax-service) (task 9ea7d36cdb634e87b334ec73a8ebc94a) failed container health checks."
+                },
+                {
+                    "id": "d88c2c94-e246-48b6-bfc3-728c3a391275",
+                    "createdAt": "2026-06-16T14:10:03.590000-07:00",
+                    "message": "(service manewax-service) has started 1 tasks: (task 9ea7d36cdb634e87b334ec73a8ebc94a). Amazon ECS replaced 1 tasks due to an unhealthy status."
+                },
+                {
+                    "id": "e56fe036-0d44-4b33-b9fb-a880264588c6",
+                    "createdAt": "2026-06-16T14:09:04.554000-07:00",
+                    "message": "(service manewax-service) has stopped 1 running tasks: (task 67f0b2c608c4496887b7dded925befa7)."
+                },
+                {
+                    "id": "c8e418e3-7413-440e-be36-85c91d01e417",
+                    "createdAt": "2026-06-16T14:09:04.553000-07:00",
+                    "message": "(service manewax-service) (task 67f0b2c608c4496887b7dded925befa7) failed container health checks."
+                },
+                {
+                    "id": "6b081b68-b5b6-4c26-95ea-c2c179597080",
+                    "createdAt": "2026-06-16T14:06:37.330000-07:00",
+                    "message": "(service manewax-service) has started 1 tasks: (task 2972028bb8844570847669729553e2d5). Amazon ECS replaced 1 tasks due to an unhealthy status."
+                },
+                {
+                    "id": "0899cfef-216b-4c77-b6ec-d3d67ec742df",
+                    "createdAt": "2026-06-16T14:05:58.741000-07:00",
+                    "message": "(service manewax-service) has stopped 1 running tasks: (task 73093eab36d24941aded3c5025fabc10)."
+                },
+                {
+                    "id": "3498b565-7abc-4f98-a3d3-2d1e02024ef2",
+                    "createdAt": "2026-06-16T14:05:58.740000-07:00",
+                    "message": "(service manewax-service) (task 73093eab36d24941aded3c5025fabc10) failed container health checks."
+                },
+                {
+                    "id": "ad721618-349d-4764-b7ad-71238443cbc2",
+                    "createdAt": "2026-06-16T14:03:27.510000-07:00",
+                    "message": "(service manewax-service) has started 1 tasks: (task 73093eab36d24941aded3c5025fabc10). Amazon ECS replaced 1 tasks due to an unhealthy status."
+                },
+                {
+                    "id": "8f9693bf-4297-433e-aa75-4124a316b1dc",
+                    "createdAt": "2026-06-16T14:02:48.686000-07:00",
+                    "message": "(service manewax-service) has stopped 1 running tasks: (task 20c3bee729c247ea86bdaf539d9acfe3)."
+                },
+                {
+                    "id": "56c0db14-8102-4586-9916-2b8bcf528454",
+                    "createdAt": "2026-06-16T14:02:48.685000-07:00",
+                    "message": "(service manewax-service) (task 20c3bee729c247ea86bdaf539d9acfe3) failed container health checks."
+                },
+                {
+                    "id": "316c7e11-8808-4b2a-8cf2-6bd87c613689",
+                    "createdAt": "2026-06-16T13:59:47.798000-07:00",
+                    "message": "(service manewax-service) has started 1 tasks: (task 20c3bee729c247ea86bdaf539d9acfe3). Amazon ECS replaced 1 tasks due to an unhealthy status."
+                },
+                {
+                    "id": "ec5fec56-2226-44fb-a752-394e04ff543a",
+                    "createdAt": "2026-06-16T13:59:10.321000-07:00",
+                    "message": "(service manewax-service) has stopped 1 running tasks: (task dcc4c4cc80314956b1aa959ac86396f0)."
+                },
+                {
+                    "id": "5a3e8b14-c686-464c-aee1-e290498d0c91",
+                    "createdAt": "2026-06-16T13:59:10.320000-07:00",
+                    "message": "(service manewax-service) (task dcc4c4cc80314956b1aa959ac86396f0) failed container health checks."
+                },
+                {
+                    "id": "f93d639a-3159-41e2-8a28-84e636db2642",
+                    "createdAt": "2026-06-16T13:56:39.752000-07:00",
+                    "message": "(service manewax-service) has started 1 tasks: (task dcc4c4cc80314956b1aa959ac86396f0). Amazon ECS replaced 1 tasks due to an unhealthy status."
+                },
+                {
+                    "id": "f6b919aa-fea6-42d4-b144-d5b988df9638",
+                    "createdAt": "2026-06-16T13:56:00.636000-07:00",
+                    "message": "(service manewax-service) has stopped 1 running tasks: (task 8243f4204cb945ffa65f8dde4749d4ae)."
+                },
+                {
+                    "id": "d091b952-ce01-411b-b88d-a4244304845c",
+                    "createdAt": "2026-06-16T13:56:00.635000-07:00",
+                    "message": "(service manewax-service) (task 8243f4204cb945ffa65f8dde4749d4ae) failed container health checks."
+                },
+                {
+                    "id": "e46bf32a-917d-4355-beec-c83b855f93a7",
+                    "createdAt": "2026-06-16T13:53:01.931000-07:00",
+                    "message": "(service manewax-service) has started 1 tasks: (task 67f0b2c608c4496887b7dded925befa7). Amazon ECS replaced 1 tasks due to an unhealthy status."
+                },
+                {
+                    "id": "d373e1ec-3272-4139-9fed-d8ff1bd608db",
+                    "createdAt": "2026-06-16T13:52:23.066000-07:00",
+                    "message": "(service manewax-service) has stopped 1 running tasks: (task cacf9b1a762848669333087e4705a74d)."
+                },
+                {
+                    "id": "5c22c4dc-c974-4441-8a8e-e486a8ef4c29",
+                    "createdAt": "2026-06-16T13:52:23.065000-07:00",
+                    "message": "(service manewax-service) (task cacf9b1a762848669333087e4705a74d) failed container health checks."
+                },
+                {
+                    "id": "f102be44-0383-4340-8577-c7ad04e2e44d",
+                    "createdAt": "2026-06-16T13:49:29.436000-07:00",
+                    "message": "(service manewax-service) has started 1 tasks: (task 8243f4204cb945ffa65f8dde4749d4ae). Amazon ECS replaced 1 tasks due to an unhealthy status."
+                },
+                {
+                    "id": "a68919f9-09eb-42cd-8dcb-55f39e0551d2",
+                    "createdAt": "2026-06-16T13:48:41.602000-07:00",
+                    "message": "(service manewax-service) has stopped 1 running tasks: (task e23de5286c9b4942a36706155adeedd4)."
+                },
+                {
+                    "id": "34a04f28-72d5-4798-a007-b3a75204f7ba",
+                    "createdAt": "2026-06-16T13:48:41.601000-07:00",
+                    "message": "(service manewax-service) (task e23de5286c9b4942a36706155adeedd4) failed container health checks."
+                },
+                {
+                    "id": "521b8162-c3a7-4233-bb3b-310228113929",
+                    "createdAt": "2026-06-16T13:46:09.404000-07:00",
+                    "message": "(service manewax-service) has started 1 tasks: (task e23de5286c9b4942a36706155adeedd4). Amazon ECS replaced 1 tasks due to an unhealthy status."
+                },
+                {
+                    "id": "2a45fb80-6a40-4333-9a7a-e5c1ece4b2ef",
+                    "createdAt": "2026-06-16T13:45:30.991000-07:00",
+                    "message": "(service manewax-service) has stopped 1 running tasks: (task 61f6b2f0315340c6ad19bd68c46d2c54)."
+                },
+                {
+                    "id": "95f20eed-d747-4bda-83cf-37245c9fa939",
+                    "createdAt": "2026-06-16T13:45:30.990000-07:00",
+                    "message": "(service manewax-service) (task 61f6b2f0315340c6ad19bd68c46d2c54) failed container health checks."
+                },
+                {
+                    "id": "b43a146d-d566-4a3c-a3a0-b0872f81cd95",
+                    "createdAt": "2026-06-16T13:42:40.519000-07:00",
+                    "message": "(service manewax-service) has started 1 tasks: (task 61f6b2f0315340c6ad19bd68c46d2c54). Amazon ECS replaced 1 tasks due to an unhealthy status."
+                },
+                {
+                    "id": "50eac602-2e3a-44eb-a89c-a40282df98d4",
+                    "createdAt": "2026-06-16T13:41:53.134000-07:00",
+                    "message": "(service manewax-service) has stopped 1 running tasks: (task 03ab035a0e264388870beb0ea4f08ba5)."
+                },
+                {
+                    "id": "4d6a3c91-3652-4865-bc90-35fb756589b5",
+                    "createdAt": "2026-06-16T13:41:53.133000-07:00",
+                    "message": "(service manewax-service) (task 03ab035a0e264388870beb0ea4f08ba5) failed container health checks."
+                },
+                {
+                    "id": "31eedf2b-655b-4279-bafe-673745806e1d",
+                    "createdAt": "2026-06-16T13:39:03.111000-07:00",
+                    "message": "(service manewax-service) has started 1 tasks: (task cacf9b1a762848669333087e4705a74d). Amazon ECS replaced 1 tasks due to an unhealthy status."
+                }
+            ],
+            "createdAt": "2026-03-31T09:38:02.660000-07:00",
+            "placementConstraints": [],
+            "placementStrategy": [],
+            "networkConfiguration": {
+                "awsvpcConfiguration": {
+                    "subnets": [
+                        "subnet-0006f4f0f88ac2641",
+                        "subnet-06f82c25c0af110db"
+                    ],
+                    "securityGroups": [
+                        "sg-0872976cf45c579e3"
+                    ],
+                    "assignPublicIp": "ENABLED"
+                }
+            },
+            "healthCheckGracePeriodSeconds": 30,
+            "schedulingStrategy": "REPLICA",
+            "deploymentController": {
+                "type": "ECS"
+            },
+            "createdBy": "arn:aws:iam::831869585621:user/manewax-deployer",
+            "enableECSManagedTags": false,
+            "propagateTags": "NONE",
+            "enableExecuteCommand": true,
+            "availabilityZoneRebalancing": "ENABLED"
+        }
+    ],
+    "failures": []
+}
