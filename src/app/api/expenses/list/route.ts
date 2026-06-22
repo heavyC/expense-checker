@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
       ? await executeSql`
           SELECT
             e.id, e.amount, e.category, e.vendor, e.description,
-            e.charge_to_client, e.approved_by_manager, e.receipt_accuracy, e.submitted_at,
+            e.charge_to_client, e.approved_by_manager, e.created_by, e.receipt_accuracy, e.submitted_at,
             CASE WHEN u.id IS NOT NULL THEN u.first_name || ' ' || u.last_name END AS approver_name,
             CASE WHEN c.id IS NOT NULL THEN c.first_name || ' ' || c.last_name END AS creator_name,
             a.verdict, a.reasoning, a.policy_citations, a.confidence, a.policy_excerpts, a.analyzed_at
@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
       : await executeSql`
           SELECT
             e.id, e.amount, e.category, e.vendor, e.description,
-            e.charge_to_client, e.approved_by_manager, e.receipt_accuracy, e.submitted_at,
+            e.charge_to_client, e.approved_by_manager, e.created_by, e.receipt_accuracy, e.submitted_at,
             CASE WHEN u.id IS NOT NULL THEN u.first_name || ' ' || u.last_name END AS approver_name,
             CASE WHEN c.id IS NOT NULL THEN c.first_name || ' ' || c.last_name END AS creator_name,
             a.verdict, a.reasoning, a.policy_citations, a.confidence, a.policy_excerpts, a.analyzed_at
