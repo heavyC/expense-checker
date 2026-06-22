@@ -11,7 +11,7 @@ interface Expense {
 }
 
 interface AnalysisResult {
-  verdict: 'APPROVED' | 'FLAGGED' | 'NEEDS_REVIEW'
+  verdict: 'APPROVED' | 'FLAGGED' | 'MANUAL_REVIEW'
   reasoning: string
   policy_citations: string[]
   confidence: number
@@ -47,7 +47,7 @@ const empty: Expense = {
 const verdictStyles: Record<AnalysisResult['verdict'], { bar: string; badge: string; label: string }> = {
   APPROVED:     { bar: 'bg-green-500',  badge: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',  label: 'Approved' },
   FLAGGED:      { bar: 'bg-red-500',    badge: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',          label: 'Flagged' },
-  NEEDS_REVIEW: { bar: 'bg-yellow-400', badge: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200', label: 'Needs Review' },
+  MANUAL_REVIEW: { bar: 'bg-yellow-400', badge: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200', label: 'Manual Review' },
 }
 
 function ConfidenceBar({ pct, barColor }: { pct: number; barColor: string }) {
@@ -103,7 +103,7 @@ function ReceiptPanel({ receipt, fileName, imageUrl }: { receipt: ReceiptResult;
 }
 
 function ResultPanel({ result }: { result: AnalysisResult }) {
-  const style = verdictStyles[result.verdict] ?? verdictStyles.NEEDS_REVIEW
+  const style = verdictStyles[result.verdict] ?? verdictStyles.MANUAL_REVIEW
   const pct = Math.round(result.confidence * 100)
 
   return (
@@ -362,7 +362,7 @@ export default function AddExpensePage() {
         {status === 'success' && savedExpenseId && (
           <div className="mt-10 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 flex flex-col gap-2">
             <span className="rounded-full self-start px-3 py-1 text-sm font-semibold bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
-              Ready for Review
+              Ready for Compliance
             </span>
             <p className="text-sm text-zinc-600 dark:text-zinc-400">
               Expense #{savedExpenseId} has been saved and is waiting for compliance review.

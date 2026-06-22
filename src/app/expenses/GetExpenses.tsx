@@ -4,7 +4,7 @@ import ExpandableAnalysis from './ExpandableAnalysis'
 const verdictStyles = {
   APPROVED:     { badge: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',     label: 'Approved' },
   FLAGGED:      { badge: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',             label: 'Flagged' },
-  NEEDS_REVIEW: { badge: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200', label: 'Needs Review' },
+  MANUAL_REVIEW: { badge: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200', label: 'Manual Review' },
 } as const
 
 type Verdict = keyof typeof verdictStyles
@@ -60,7 +60,7 @@ export default async function ExpensesPage() {
         ) : (
           <div className="flex flex-col gap-4">
             {rows.map((row) => {
-              const style = row.verdict ? (verdictStyles[row.verdict as Verdict] ?? verdictStyles.NEEDS_REVIEW) : null
+              const style = row.verdict ? (verdictStyles[row.verdict as Verdict] ?? verdictStyles.MANUAL_REVIEW) : null
               const confidencePct = row.confidence ? Math.round(parseFloat(row.confidence) * 100) : null
               const accuracyPct = row.receipt_accuracy ? Math.round(parseFloat(row.receipt_accuracy) * 100) : null
 
@@ -106,7 +106,7 @@ export default async function ExpensesPage() {
                   ) : (
                     <div className="border-t border-zinc-100 dark:border-zinc-800 pt-3 flex items-center gap-3">
                       <span className="rounded-full px-3 py-0.5 text-xs font-semibold bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
-                        Ready for Review
+                        Ready for Compliance
                       </span>
                       <a href="/review" className="text-xs text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-colors">
                         Go to Review →

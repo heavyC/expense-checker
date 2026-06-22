@@ -12,7 +12,7 @@ POLICY RULES (retrieved from company policy database):
 
 Return exactly this JSON structure:
 {{
-  "verdict": "APPROVED" | "FLAGGED" | "NEEDS_REVIEW",
+  "verdict": "APPROVED" | "FLAGGED" | "MANUAL_REVIEW",
   "reasoning": "<detailed explanation referencing specific policy rules>",
   "policy_citations": ["<verbatim or paraphrased rule 1>", "..."],
   "confidence": <float 0.0-1.0>
@@ -21,7 +21,7 @@ Return exactly this JSON structure:
 Verdict definitions:
 - APPROVED: expense clearly complies with all applicable policies
 - FLAGGED:  expense clearly violates one or more policies
-- NEEDS_REVIEW: policy coverage is ambiguous, incomplete, or conflicting"""
+- MANUAL_REVIEW: policy coverage is ambiguous, incomplete, or conflicting"""
 
 
 RECEIPT_PARSING_PROMPT = """You are a receipt parsing assistant. Examine the receipt image and extract expense information.

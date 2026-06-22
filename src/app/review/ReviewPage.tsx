@@ -130,7 +130,7 @@ export default function ReviewPage({ expenses }: { expenses: PendingExpense[] })
               )}
             </div>
             <span className="shrink-0 rounded-full px-2.5 py-0.5 text-xs font-semibold bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
-              Ready for Review
+              Ready for Compliance
             </span>
           </label>
         ))}
