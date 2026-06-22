@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
+import { useUser } from '../components/UserContext'
 
 interface PendingExpense {
   id: number
@@ -13,6 +14,8 @@ interface PendingExpense {
   approved_by_manager: boolean
   approved_by: number | null
   submitted_at: string
+  created_by: number
+  creator_name: string | null
 }
 
 interface AdminUser {
@@ -23,6 +26,7 @@ interface AdminUser {
 
 export default function ReviewPage({ expenses, adminUsers }: { expenses: PendingExpense[]; adminUsers: AdminUser[] }) {
   const router = useRouter()
+  const { currentUser } = useUser()
   const [selected, setSelected] = useState<Set<number>>(new Set())
   const [managerApproved, setManagerApproved] = useState<Record<number, boolean>>(
     Object.fromEntries(expenses.map(e => [e.id, e.approved_by_manager]))
@@ -51,8 +55,12 @@ export default function ReviewPage({ expenses, adminUsers }: { expenses: Pending
   const [status, setStatus] = useState<'idle' | 'submitting' | 'done' | 'error'>('idle')
   const [errorMessage, setErrorMessage] = useState('')
 
+  function isOwnExpense(exp: PendingExpense) {
+    return currentUser != null && exp.created_by === currentUser.id
+  }
+
   function toggleAll(checked: boolean) {
-    setSelected(checked ? new Set(expenses.map((e) => e.id)) : new Set())
+    setSelected(checked ? new Set(expenses.filter(e => !isOwnExpense(e)).map((e) => e.id)) : new Set())
   }
 
   function toggleOne(id: number, checked: boolean) {
@@ -130,16 +138,20 @@ export default function ReviewPage({ expenses, adminUsers }: { expenses: Pending
 
       {/* Expense list */}
       <div className="flex flex-col gap-2">
-        {expenses.map((exp) => (
+        {expenses.map((exp) => {
+          const ownExpense = isOwnExpense(exp)
+          return (
           <label
             key={exp.id}
-            className="flex items-start gap-4 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-4 py-4 cursor-pointer hover:border-zinc-300 dark:hover:border-zinc-700 transition-colors"
+            className={`flex items-start gap-4 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-4 py-4 transition-colors ${ownExpense ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer hover:border-zinc-300 dark:hover:border-zinc-700'}`}
           >
             <input
               type="checkbox"
               checked={selected.has(exp.id)}
-              onChange={(e) => toggleOne(exp.id, e.target.checked)}
-              className="mt-0.5 h-4 w-4 shrink-0 rounded border-zinc-300 accent-black dark:accent-white"
+              onChange={(e) => !ownExpense && toggleOne(exp.id, e.target.checked)}
+              disabled={ownExpense}
+              title={ownExpense ? 'You cannot submit your own expense reports' : undefined}
+              className="mt-0.5 h-4 w-4 shrink-0 rounded border-zinc-300 accent-black dark:accent-white disabled:cursor-not-allowed"
             />
             <div className="flex flex-1 flex-col gap-1 min-w-0">
               <div className="flex items-baseline justify-between gap-4">
@@ -156,6 +168,18 @@ export default function ReviewPage({ expenses, adminUsers }: { expenses: Pending
                 <span>#{exp.id}</span>
                 <span>·</span>
                 <span>{new Date(exp.submitted_at).toLocaleString()}</span>
+                {exp.creator_name && (
+                  <>
+                    <span>·</span>
+                    <span>Submitted by {exp.creator_name}</span>
+                  </>
+                )}
+                {ownExpense && (
+                  <>
+                    <span>·</span>
+                    <span className="text-amber-500 dark:text-amber-400">your report — cannot submit</span>
+                  </>
+                )}
               </div>
               {exp.description && (
                 <p className="text-xs text-zinc-500 dark:text-zinc-400 truncate">{exp.description}</p>
@@ -194,7 +218,8 @@ export default function ReviewPage({ expenses, adminUsers }: { expenses: Pending
               </div>
             </div>
           </label>
-        ))}
+          )
+        })}
       </div>
     </form>
   )

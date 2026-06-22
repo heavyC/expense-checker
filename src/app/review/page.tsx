@@ -5,9 +5,11 @@ export default async function Review() {
   const [expenses, adminUsers] = await Promise.all([
     executeSql`
       SELECT e.id, e.amount, e.category, e.vendor, e.description,
-             e.charge_to_client, e.approved_by_manager, e.approved_by, e.submitted_at
+             e.charge_to_client, e.approved_by_manager, e.approved_by, e.submitted_at,
+             e.created_by, u.first_name || ' ' || u.last_name AS creator_name
       FROM expenses e
       LEFT JOIN expense_analyses a ON a.expense_id = e.id
+      LEFT JOIN users u ON u.id = e.created_by
       WHERE a.id IS NULL
       ORDER BY e.submitted_at DESC
     `,
