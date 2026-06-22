@@ -25,6 +25,18 @@ CREATE TABLE expenses (
 );
 
 
+CREATE TYPE user_role AS ENUM ('active', 'inactive', 'admin');
+
+CREATE TABLE users (
+    id          SERIAL       PRIMARY KEY,
+    first_name  VARCHAR(100) NOT NULL,
+    last_name   VARCHAR(100) NOT NULL,
+    login_id    VARCHAR(100) NOT NULL UNIQUE,
+    role        user_role    NOT NULL DEFAULT 'active',
+    created_at  TIMESTAMPTZ  NOT NULL DEFAULT NOW()
+);
+
+
 -- Compliance analysis output produced by analyzeExpense() in compliance.py.
 CREATE TABLE expense_analyses (
     id               SERIAL        PRIMARY KEY,
