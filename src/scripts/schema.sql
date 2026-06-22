@@ -20,8 +20,11 @@ CREATE TABLE expenses (
     vendor           VARCHAR(255)   NOT NULL,
     description      TEXT,
     charge_to_client BOOLEAN        NOT NULL DEFAULT FALSE,
-    receipt_accuracy NUMERIC(4, 3),   -- NULL when expense is entered manually
-    submitted_at     TIMESTAMPTZ    NOT NULL DEFAULT NOW()
+    receipt_accuracy    NUMERIC(4, 3),   -- NULL when expense is entered manually
+    approved_by_manager BOOLEAN        NOT NULL DEFAULT FALSE,
+    approved_by         INTEGER        REFERENCES users(id),
+    created_by          INTEGER        NOT NULL REFERENCES users(id),
+    submitted_at        TIMESTAMPTZ    NOT NULL DEFAULT NOW()
 );
 
 

@@ -10,12 +10,44 @@ interface PendingExpense {
   vendor: string
   description: string | null
   charge_to_client: boolean
+  approved_by_manager: boolean
+  approved_by: number | null
   submitted_at: string
 }
 
-export default function ReviewPage({ expenses }: { expenses: PendingExpense[] }) {
+interface AdminUser {
+  id: number
+  first_name: string
+  last_name: string
+}
+
+export default function ReviewPage({ expenses, adminUsers }: { expenses: PendingExpense[]; adminUsers: AdminUser[] }) {
   const router = useRouter()
   const [selected, setSelected] = useState<Set<number>>(new Set())
+  const [managerApproved, setManagerApproved] = useState<Record<number, boolean>>(
+    Object.fromEntries(expenses.map(e => [e.id, e.approved_by_manager]))
+  )
+  const [approvedBy, setApprovedBy] = useState<Record<number, number | null>>(
+    Object.fromEntries(expenses.map(e => [e.id, e.approved_by]))
+  )
+
+  async function toggleManagerApproval(id: number, value: boolean) {
+    setManagerApproved(prev => ({ ...prev, [id]: value }))
+    await fetch(`/api/expenses/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ approved_by_manager: value }),
+    })
+  }
+
+  async function setApprover(id: number, userId: number | null) {
+    setApprovedBy(prev => ({ ...prev, [id]: userId }))
+    await fetch(`/api/expenses/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ approved_by: userId }),
+    })
+  }
   const [status, setStatus] = useState<'idle' | 'submitting' | 'done' | 'error'>('idle')
   const [errorMessage, setErrorMessage] = useState('')
 
@@ -129,9 +161,38 @@ export default function ReviewPage({ expenses }: { expenses: PendingExpense[] })
                 <p className="text-xs text-zinc-500 dark:text-zinc-400 truncate">{exp.description}</p>
               )}
             </div>
-            <span className="shrink-0 rounded-full px-2.5 py-0.5 text-xs font-semibold bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
-              Ready for Compliance
-            </span>
+            <div className="flex flex-col items-end gap-2 shrink-0">
+              <span className="rounded-full px-2.5 py-0.5 text-xs font-semibold bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                Ready for Compliance
+              </span>
+              <label
+                className="flex items-center gap-1.5 text-xs text-zinc-500 dark:text-zinc-400 cursor-pointer select-none"
+                onClick={e => e.stopPropagation()}
+              >
+                <input
+                  type="checkbox"
+                  checked={managerApproved[exp.id] ?? false}
+                  onChange={e => toggleManagerApproval(exp.id, e.target.checked)}
+                  className="h-3.5 w-3.5 rounded border-zinc-300 accent-black dark:accent-white"
+                />
+                Approved by Manager
+              </label>
+              <div className="flex flex-col gap-0.5" onClick={e => e.stopPropagation()}>
+                <span className="text-xs text-zinc-400">Approved By</span>
+                <select
+                  value={approvedBy[exp.id] ?? ''}
+                  onChange={e => setApprover(exp.id, e.target.value ? parseInt(e.target.value) : null)}
+                  className="rounded border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-2 py-1 text-xs focus:outline-none"
+                >
+                  <option value="">— None —</option>
+                  {adminUsers.map(u => (
+                    <option key={u.id} value={u.id}>
+                      {u.first_name} {u.last_name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
           </label>
         ))}
       </div>

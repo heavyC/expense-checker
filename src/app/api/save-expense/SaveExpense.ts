@@ -11,16 +11,27 @@ export async function POST(request: NextRequest) {
     }
   }
 
+  const createdBy: number | null = expense.created_by ? parseInt(expense.created_by) : null
+
+  if (createdBy) {
+    const [user] = await executeSql`SELECT role FROM users WHERE id = ${createdBy}`
+    if (!user) return Response.json({ error: 'User not found' }, { status: 400 })
+    if (user.role === 'inactive') return Response.json({ error: 'Inactive users cannot create expense reports' }, { status: 403 })
+  }
+
   try {
-    // If a receipt was already parsed and saved, expense_id is already in DB — nothing to insert
+    // Receipt already created the expense row — just stamp created_by
     if (expense.expense_id) {
+      if (createdBy) {
+        await executeSql`UPDATE expenses SET created_by = ${createdBy} WHERE id = ${expense.expense_id}`
+      }
       return Response.json({ success: true, expense_id: expense.expense_id })
     }
 
     const [row] = await executeSql`
-      INSERT INTO expenses (amount, category, vendor, description, charge_to_client)
+      INSERT INTO expenses (amount, category, vendor, description, charge_to_client, created_by)
       VALUES (${expense.amount}, ${expense.category}, ${expense.vendor},
-              ${expense.description}, ${expense.chargeToClient})
+              ${expense.description}, ${expense.chargeToClient}, ${createdBy})
       RETURNING id
     `
     return Response.json({ success: true, expense_id: row.id })

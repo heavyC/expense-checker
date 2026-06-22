@@ -1,6 +1,7 @@
 'use client'
 
 import { useRef, useState } from 'react'
+import { useUser } from '../components/UserContext'
 
 interface Expense {
   amount: string
@@ -47,7 +48,7 @@ const empty: Expense = {
 const verdictStyles: Record<AnalysisResult['verdict'], { bar: string; badge: string; label: string }> = {
   APPROVED:     { bar: 'bg-green-500',  badge: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',  label: 'Approved' },
   FLAGGED:      { bar: 'bg-red-500',    badge: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',          label: 'Flagged' },
-  MANUAL_REVIEW: { bar: 'bg-yellow-400', badge: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200', label: 'Manual Review' },
+  MANUAL_REVIEW: { bar: 'bg-yellow-400', badge: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200', label: 'Manual Review Required' },
 }
 
 function ConfidenceBar({ pct, barColor }: { pct: number; barColor: string }) {
@@ -152,6 +153,7 @@ function ResultPanel({ result }: { result: AnalysisResult }) {
 }
 
 export default function AddExpensePage() {
+  const { currentUser } = useUser()
   const [form, setForm] = useState<Expense>(empty)
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle')
   const [result, setResult] = useState<AnalysisResult | null>(null)
@@ -185,6 +187,7 @@ export default function AddExpensePage() {
 
     const fd = new FormData()
     fd.append('receipt', file)
+    if (currentUser) fd.append('created_by', String(currentUser.id))
 
     try {
       const res = await fetch('/api/parse-receipt', { method: 'POST', body: fd })
@@ -220,7 +223,7 @@ export default function AddExpensePage() {
     setResult(null)
     setErrorMessage('')
 
-    const payload = { ...form, amount: parseFloat(form.amount), expense_id: expenseId }
+    const payload = { ...form, amount: parseFloat(form.amount), expense_id: expenseId, created_by: currentUser?.id ?? null }
 
     try {
       const res = await fetch('/api/save-expense', {
@@ -346,9 +349,15 @@ export default function AddExpensePage() {
             Charge to Client
           </label>
 
+          {!currentUser && (
+            <p className="text-sm text-amber-600 dark:text-amber-400">You must be logged in to submit an expense.</p>
+          )}
+          {currentUser?.role === 'inactive' && (
+            <p className="text-sm text-amber-600 dark:text-amber-400">Inactive users cannot create expense reports.</p>
+          )}
           <button
             type="submit"
-            disabled={status === 'submitting'}
+            disabled={status === 'submitting' || !currentUser || currentUser.role === 'inactive'}
             className="rounded bg-black text-white py-2 px-4 text-sm font-semibold hover:bg-zinc-800 disabled:opacity-50 dark:bg-white dark:text-black dark:hover:bg-zinc-200"
           >
             {status === 'submitting' ? 'Saving…' : 'Submit Expense'}

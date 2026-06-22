@@ -2,14 +2,19 @@ import { executeSql } from '../../lib/db'
 import ReviewPage from './ReviewPage'
 
 export default async function Review() {
-  const expenses = await executeSql`
-    SELECT e.id, e.amount, e.category, e.vendor, e.description,
-           e.charge_to_client, e.submitted_at
-    FROM expenses e
-    LEFT JOIN expense_analyses a ON a.expense_id = e.id
-    WHERE a.id IS NULL
-    ORDER BY e.submitted_at DESC
-  `
+  const [expenses, adminUsers] = await Promise.all([
+    executeSql`
+      SELECT e.id, e.amount, e.category, e.vendor, e.description,
+             e.charge_to_client, e.approved_by_manager, e.approved_by, e.submitted_at
+      FROM expenses e
+      LEFT JOIN expense_analyses a ON a.expense_id = e.id
+      WHERE a.id IS NULL
+      ORDER BY e.submitted_at DESC
+    `,
+    executeSql`
+      SELECT id, first_name, last_name FROM users WHERE role = 'admin' ORDER BY last_name, first_name
+    `,
+  ])
 
   return (
     <div className="flex flex-col flex-1 bg-zinc-50 dark:bg-black">
@@ -22,7 +27,7 @@ export default async function Review() {
             Expenses waiting for compliance analysis. Select the ones you want to submit.
           </p>
         </div>
-        <ReviewPage expenses={expenses as any} />
+        <ReviewPage expenses={expenses as any} adminUsers={adminUsers as any} />
       </main>
     </div>
   )

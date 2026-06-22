@@ -4,7 +4,7 @@ import ExpandableAnalysis from './ExpandableAnalysis'
 const verdictStyles = {
   APPROVED:     { badge: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',     label: 'Approved' },
   FLAGGED:      { badge: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',             label: 'Flagged' },
-  MANUAL_REVIEW: { badge: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200', label: 'Manual Review' },
+  MANUAL_REVIEW: { badge: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200', label: 'Manual Review Required' },
 } as const
 
 type Verdict = keyof typeof verdictStyles
@@ -16,6 +16,9 @@ interface ExpenseRow {
   vendor: string
   description: string | null
   charge_to_client: boolean
+  approved_by_manager: boolean
+  approver_name: string | null
+  creator_name: string | null
   receipt_accuracy: string | null
   submitted_at: string
   verdict: Verdict | null
@@ -35,8 +38,11 @@ export default async function ExpensesPage() {
       e.vendor,
       e.description,
       e.charge_to_client,
+      e.approved_by_manager,
       e.receipt_accuracy,
       e.submitted_at,
+      CASE WHEN u.id IS NOT NULL THEN u.first_name || ' ' || u.last_name END AS approver_name,
+      CASE WHEN c.id IS NOT NULL THEN c.first_name || ' ' || c.last_name END AS creator_name,
       a.verdict,
       a.reasoning,
       a.policy_citations,
@@ -45,6 +51,8 @@ export default async function ExpensesPage() {
       a.analyzed_at
     FROM expenses e
     LEFT JOIN expense_analyses a ON a.expense_id = e.id
+    LEFT JOIN users u ON u.id = e.approved_by
+    LEFT JOIN users c ON c.id = e.created_by
     ORDER BY e.submitted_at DESC
   `
 
@@ -86,8 +94,11 @@ export default async function ExpensesPage() {
 
                   {/* Expense details */}
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
+                    {row.creator_name && <Field label="Created By" value={row.creator_name} />}
                     <Field label="Category" value={row.category} />
                     <Field label="Charge to Client" value={row.charge_to_client ? 'Yes' : 'No'} />
+                    <Field label="Approved by Manager" value={row.approved_by_manager ? 'Yes' : 'No'} />
+                    {row.approver_name && <Field label="Approved By" value={row.approver_name} />}
                     {accuracyPct !== null && <Field label="Receipt Accuracy" value={`${accuracyPct}%`} />}
                     {row.description && <Field label="Description" value={row.description} className="col-span-2 sm:col-span-2" />}
                   </div>
