@@ -11,7 +11,8 @@ const NAV_LINKS = [
   { href: '/expenses',    label: 'View Expense Reports' },
   { href: '/review',      label: 'Ready for Compliance Review' },
   { href: '/add-policy',  label: 'Upload a New Policy Document' },
-  { href: '/policies',    label: 'View All Expense Policy Docs' },
+  { href: '/policies',        label: 'View All Expense Policy Docs' },
+  { href: '/update-prompts', label: 'View & Update Prompts' },
 ]
 
 const ROLE_BADGE: Record<UserRole, string> = {
@@ -85,7 +86,7 @@ export default function Header() {
             {loading ? null : currentUser ? (
               <>
                 <span className="text-sm text-zinc-600 dark:text-zinc-400">
-                  Hi, <span className="font-medium text-black dark:text-white">{currentUser.first_name}</span>
+                  Hello <span className="font-medium text-black dark:text-white">{currentUser.first_name}</span>
                 </span>
                 <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold capitalize ${ROLE_BADGE[currentUser.role]}`}>
                   {currentUser.role}

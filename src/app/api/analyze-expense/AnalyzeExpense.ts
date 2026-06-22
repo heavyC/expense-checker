@@ -14,6 +14,11 @@ export async function POST(request: NextRequest) {
   }
 
   try {
+    const [promptRow] = await executeSql`
+      SELECT body FROM prompts WHERE name = 'compliance_analysis' AND is_active = TRUE
+    `
+    if (promptRow) expense._prompt = promptRow.body
+
     const raw = await runPython(expense)
     let result: Record<string, unknown>
     try {

@@ -67,7 +67,8 @@ def analyzeExpense(expenseDict: dict) -> dict:
         else "No specific policy rules were found in the database."
     )
 
-    prompt = COMPLIANCE_ANALYSIS_PROMPT.format(
+    prompt_template = expenseDict.pop("_prompt", None) or COMPLIANCE_ANALYSIS_PROMPT
+    prompt = prompt_template.format(
         amount=expenseDict.get('amount', 0),
         category=expenseDict.get('category', 'unknown'),
         vendor=expenseDict.get('vendor', 'unknown'),

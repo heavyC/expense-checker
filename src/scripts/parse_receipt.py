@@ -12,7 +12,7 @@ from prompts import RECEIPT_PARSING_PROMPT
 VALID_CATEGORIES = ['meals', 'travel', 'lodging', 'software', 'equipment', 'other']
 
 
-def parse_receipt(image_path: str) -> dict:
+def parse_receipt(image_path: str, prompt: str | None = None) -> dict:
     with open(image_path, 'rb') as f:
         image_bytes = f.read()
 
@@ -29,7 +29,7 @@ def parse_receipt(image_path: str) -> dict:
 
     client = anthropic.Anthropic()
 
-    prompt = RECEIPT_PARSING_PROMPT
+    prompt = prompt or RECEIPT_PARSING_PROMPT
 
     response = client.messages.create(
         model="claude-opus-4-8",

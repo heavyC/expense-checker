@@ -25,7 +25,12 @@ export async function POST(request: NextRequest) {
     const buffer = Buffer.from(await file.arrayBuffer())
     await writeFile(tmpPath, buffer)
 
-    const raw = await runPython(tmpPath)
+    const [promptRow] = await executeSql`
+      SELECT body FROM prompts WHERE name = 'receipt_parsing' AND is_active = TRUE
+    `
+    const prompt = promptRow?.body ?? null
+
+    const raw = await runPython(tmpPath, prompt)
     const result = JSON.parse(raw)
 
     const [row] = await executeSql`
@@ -43,14 +48,14 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export function runPython(imagePath: string): Promise<string> {
+export function runPython(imagePath: string, prompt: string | null = null): Promise<string> {
   return new Promise((resolve, reject) => {
     const proc = spawn('python3', ['-c', `
 import sys, json
 sys.path.insert(0, '${join(process.cwd(), 'src', 'scripts')}')
 from parse_receipt import parse_receipt
 payload = json.loads(sys.stdin.read())
-print(json.dumps(parse_receipt(payload['image_path'])))
+print(json.dumps(parse_receipt(payload['image_path'], payload.get('prompt'))))
 `])
 
     let stdout = ''
@@ -58,7 +63,7 @@ print(json.dumps(parse_receipt(payload['image_path'])))
 
     proc.stdout.on('data', (d: Buffer) => { stdout += d.toString() })
     proc.stderr.on('data', (d: Buffer) => { stderr += d.toString() })
-    proc.stdin.write(JSON.stringify({ image_path: imagePath }))
+    proc.stdin.write(JSON.stringify({ image_path: imagePath, prompt }))
     proc.stdin.end()
 
     proc.on('close', (code) => {
