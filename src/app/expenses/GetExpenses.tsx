@@ -20,6 +20,7 @@ interface ExpenseRow {
   description: string | null
   charge_to_client: boolean
   approved_by_manager: boolean
+  created_by: number
   approver_name: string | null
   creator_name: string | null
   receipt_accuracy: string | null
@@ -36,8 +37,23 @@ export default function ExpensesPage() {
   const { currentUser, loading: userLoading } = useUser()
   const [rows, setRows] = useState<ExpenseRow[]>([])
   const [loading, setLoading] = useState(true)
+  const [submitting, setSubmitting] = useState<Record<number, boolean>>({})
 
   const isInactive = currentUser?.role === 'inactive'
+  const isAdmin = currentUser?.role === 'admin'
+
+  async function submitToCompliance(id: number) {
+    setSubmitting(prev => ({ ...prev, [id]: true }))
+    await fetch('/api/batch-analyze', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ expense_ids: [id] }),
+    })
+    const params = new URLSearchParams({ userId: String(currentUser!.id), role: currentUser!.role })
+    const data = await fetch(`/api/expenses/list?${params}`).then(r => r.json())
+    if (Array.isArray(data)) setRows(data)
+    setSubmitting(prev => ({ ...prev, [id]: false }))
+  }
 
   useEffect(() => {
     if (userLoading) return
@@ -93,6 +109,7 @@ export default function ExpensesPage() {
               const style = row.verdict ? (verdictStyles[row.verdict as Verdict] ?? verdictStyles.MANUAL_REVIEW) : null
               const confidencePct = row.confidence ? Math.round(parseFloat(row.confidence) * 100) : null
               const accuracyPct = row.receipt_accuracy ? Math.round(parseFloat(row.receipt_accuracy) * 100) : null
+              const isCreator = currentUser.id === row.created_by
 
               return (
                 <div
@@ -135,12 +152,32 @@ export default function ExpensesPage() {
                     />
                   ) : (
                     <div className="border-t border-zinc-100 dark:border-zinc-800 pt-3 flex items-center gap-3">
-                      <span className="rounded-full px-3 py-0.5 text-xs font-semibold bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
-                        Ready for Compliance
-                      </span>
-                      {!isInactive && (
-                        <a href="/review" className="text-xs text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-colors">
-                          Go to Review →
+                      {isAdmin && !isCreator ? (
+                        <button
+                          onClick={() => submitToCompliance(row.id)}
+                          disabled={submitting[row.id]}
+                          className="rounded-full px-3 py-0.5 text-xs font-semibold bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 hover:bg-blue-200 dark:hover:bg-blue-800 disabled:opacity-50 transition-colors"
+                        >
+                          {submitting[row.id] ? 'Processing…' : 'Ready for Compliance'}
+                        </button>
+                      ) : isAdmin && isCreator ? (
+                        <span
+                          title="Admins cannot submit their own reports"
+                          className="rounded-full px-3 py-0.5 text-xs font-semibold bg-zinc-100 text-zinc-400 dark:bg-zinc-800 dark:text-zinc-500 cursor-not-allowed"
+                        >
+                          Ready for Compliance
+                        </span>
+                      ) : (
+                        <span className="rounded-full px-3 py-0.5 text-xs font-semibold bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                          Ready for Compliance
+                        </span>
+                      )}
+                      {isCreator && !isInactive && (
+                        <a
+                          href={`/expenses/${row.id}/edit`}
+                          className="rounded-full px-3 py-0.5 text-xs font-semibold bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors"
+                        >
+                          Edit
                         </a>
                       )}
                     </div>

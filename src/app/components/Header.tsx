@@ -51,6 +51,7 @@ export default function Header() {
     setSubmitting(false)
     if (result.error) { setError(result.error); return }
     closeModal()
+    router.push('/expenses')
   }
 
   async function handleCreate(e: React.SyntheticEvent) {
@@ -60,6 +61,7 @@ export default function Header() {
     setSubmitting(false)
     if (result.error) { setError(result.error); return }
     closeModal()
+    router.push('/expenses')
   }
 
   const inputCls = 'w-full rounded border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white'
