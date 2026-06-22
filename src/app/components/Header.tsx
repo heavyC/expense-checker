@@ -1,17 +1,20 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { useUser, UserRole } from './UserContext'
 
-const NAV_LINKS = [
+const USER_LINKS = [
   { href: '/',            label: 'Home' },
   { href: '/add-expense', label: 'Add Expense' },
   { href: '/expenses',    label: 'View Expense Reports' },
-  { href: '/review',      label: 'Ready for Compliance Review' },
-  { href: '/add-policy',  label: 'Upload a New Policy Document' },
-  { href: '/policies',        label: 'View All Expense Policy Docs' },
+]
+
+const ADMIN_LINKS = [
+  { href: '/review',         label: 'Ready for Compliance Review' },
+  { href: '/add-policy',     label: 'Upload a New Policy Document' },
+  { href: '/policies',       label: 'View All Expense Policy Docs' },
   { href: '/update-prompts', label: 'View & Update Prompts' },
 ]
 
@@ -25,6 +28,7 @@ type Modal = 'login' | 'create' | null
 
 export default function Header() {
   const pathname = usePathname()
+  const router = useRouter()
   const { currentUser, loading, login, logout, createUser } = useUser()
 
   const [modal, setModal] = useState<Modal>(null)
@@ -65,9 +69,11 @@ export default function Header() {
   return (
     <>
       <header className="w-full border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-black">
-        <nav className="flex items-center justify-between px-6 py-4">
-          <div className="flex gap-8">
-            {NAV_LINKS.map(({ href, label }) => (
+        {/* Top row: user links + auth */}
+        <div className="flex items-center justify-between px-6 py-3 border-b border-zinc-100 dark:border-zinc-900">
+          <nav className="flex items-center gap-8">
+            <span className="text-xs font-semibold text-zinc-400 dark:text-zinc-500 uppercase tracking-wide shrink-0">Users:</span>
+            {USER_LINKS.map(({ href, label }) => (
               <Link
                 key={href}
                 href={href}
@@ -80,7 +86,7 @@ export default function Header() {
                 {label}
               </Link>
             ))}
-          </div>
+          </nav>
 
           <div className="flex items-center gap-3 shrink-0">
             {loading ? null : currentUser ? (
@@ -91,7 +97,7 @@ export default function Header() {
                 <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold capitalize ${ROLE_BADGE[currentUser.role]}`}>
                   {currentUser.role}
                 </span>
-                <button onClick={logout} className={btnGhost}>Logout</button>
+                <button onClick={() => { logout(); router.push('/') }} className={btnGhost}>Logout</button>
               </>
             ) : (
               <>
@@ -100,7 +106,27 @@ export default function Header() {
               </>
             )}
           </div>
-        </nav>
+        </div>
+
+        {/* Bottom row: admin links — only shown to admins */}
+        {currentUser?.role === 'admin' && (
+          <nav className="flex items-center gap-8 px-6 py-2">
+            <span className="text-xs font-semibold text-zinc-400 dark:text-zinc-500 uppercase tracking-wide shrink-0">Admins:</span>
+            {ADMIN_LINKS.map(({ href, label }) => (
+              <Link
+                key={href}
+                href={href}
+                className={`text-xs font-medium transition-colors ${
+                  pathname === href
+                    ? 'text-black dark:text-white'
+                    : 'text-zinc-400 dark:text-zinc-500 hover:text-black dark:hover:text-white'
+                }`}
+              >
+                {label}
+              </Link>
+            ))}
+          </nav>
+        )}
       </header>
 
       {/* Overlay */}

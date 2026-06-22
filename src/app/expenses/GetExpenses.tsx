@@ -1,4 +1,7 @@
-import { executeSql } from '../../lib/db'
+'use client'
+
+import { useEffect, useState } from 'react'
+import { useUser } from '../components/UserContext'
 import ExpandableAnalysis from './ExpandableAnalysis'
 
 const verdictStyles = {
@@ -29,39 +32,58 @@ interface ExpenseRow {
   analyzed_at: string | null
 }
 
-export default async function ExpensesPage() {
-  const rows = await executeSql`
-    SELECT
-      e.id,
-      e.amount,
-      e.category,
-      e.vendor,
-      e.description,
-      e.charge_to_client,
-      e.approved_by_manager,
-      e.receipt_accuracy,
-      e.submitted_at,
-      CASE WHEN u.id IS NOT NULL THEN u.first_name || ' ' || u.last_name END AS approver_name,
-      CASE WHEN c.id IS NOT NULL THEN c.first_name || ' ' || c.last_name END AS creator_name,
-      a.verdict,
-      a.reasoning,
-      a.policy_citations,
-      a.confidence,
-      a.policy_excerpts,
-      a.analyzed_at
-    FROM expenses e
-    LEFT JOIN expense_analyses a ON a.expense_id = e.id
-    LEFT JOIN users u ON u.id = e.approved_by
-    LEFT JOIN users c ON c.id = e.created_by
-    ORDER BY e.submitted_at DESC
-  `
+export default function ExpensesPage() {
+  const { currentUser, loading: userLoading } = useUser()
+  const [rows, setRows] = useState<ExpenseRow[]>([])
+  const [loading, setLoading] = useState(true)
+
+  const isInactive = currentUser?.role === 'inactive'
+
+  useEffect(() => {
+    if (userLoading) return
+    if (!currentUser) { setLoading(false); return }
+
+    const params = new URLSearchParams({
+      userId: String(currentUser.id),
+      role: currentUser.role,
+    })
+    fetch(`/api/expenses/list?${params}`)
+      .then(r => r.json())
+      .then(data => setRows(Array.isArray(data) ? data : []))
+      .finally(() => setLoading(false))
+  }, [currentUser, userLoading])
+
+  if (userLoading || loading) {
+    return (
+      <div className="flex flex-col flex-1 bg-zinc-50 dark:bg-black">
+        <main className="w-full max-w-4xl mx-auto py-12 px-6">
+          <p className="text-sm text-zinc-500">Loading…</p>
+        </main>
+      </div>
+    )
+  }
+
+  if (!currentUser) {
+    return (
+      <div className="flex flex-col flex-1 bg-zinc-50 dark:bg-black">
+        <main className="w-full max-w-4xl mx-auto py-12 px-6">
+          <p className="text-sm text-zinc-500">Please log in to view expense reports.</p>
+        </main>
+      </div>
+    )
+  }
 
   return (
     <div className="flex flex-col flex-1 bg-zinc-50 dark:bg-black">
       <main className="w-full max-w-4xl mx-auto py-12 px-6 flex flex-col gap-6">
-        <h1 className="text-3xl font-semibold tracking-tight text-black dark:text-white">
-          Expense Reports
-        </h1>
+        <div className="flex items-baseline gap-3">
+          <h1 className="text-3xl font-semibold tracking-tight text-black dark:text-white">
+            Expense Reports
+          </h1>
+          {isInactive && (
+            <span className="text-sm text-amber-600 dark:text-amber-400">Read-only — inactive account</span>
+          )}
+        </div>
 
         {rows.length === 0 ? (
           <p className="text-sm text-zinc-500">No expenses submitted yet.</p>
@@ -77,7 +99,6 @@ export default async function ExpensesPage() {
                   key={row.id}
                   className="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-5 flex flex-col gap-4"
                 >
-                  {/* Header row */}
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex flex-col gap-0.5">
                       <span className="text-base font-semibold text-black dark:text-white">
@@ -92,7 +113,6 @@ export default async function ExpensesPage() {
                     </span>
                   </div>
 
-                  {/* Expense details */}
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
                     {row.creator_name && <Field label="Created By" value={row.creator_name} />}
                     <Field label="Category" value={row.category} />
@@ -103,7 +123,6 @@ export default async function ExpensesPage() {
                     {row.description && <Field label="Description" value={row.description} className="col-span-2 sm:col-span-2" />}
                   </div>
 
-                  {/* Analysis */}
                   {style && row.verdict ? (
                     <ExpandableAnalysis
                       reasoning={row.reasoning}
@@ -119,9 +138,11 @@ export default async function ExpensesPage() {
                       <span className="rounded-full px-3 py-0.5 text-xs font-semibold bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
                         Ready for Compliance
                       </span>
-                      <a href="/review" className="text-xs text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-colors">
-                        Go to Review →
-                      </a>
+                      {!isInactive && (
+                        <a href="/review" className="text-xs text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-colors">
+                          Go to Review →
+                        </a>
+                      )}
                     </div>
                   )}
                 </div>

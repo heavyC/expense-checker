@@ -260,113 +260,116 @@ export default function AddExpensePage() {
           Add an Expense
         </h1>
 
-        {/* Receipt upload */}
-        <div className="mb-8 w-full max-w-sm">
-          <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">Upload a receipt to auto-fill</p>
-          <label className="flex cursor-pointer items-center justify-center gap-2 rounded border-2 border-dashed border-zinc-300 dark:border-zinc-600 px-4 py-5 text-sm text-zinc-500 dark:text-zinc-400 hover:border-zinc-400 dark:hover:border-zinc-500 transition-colors">
-            {receiptStatus === 'parsing' ? 'Parsing receipt…' : 'Choose image (JPEG, PNG, WebP)'}
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/jpeg,image/png,image/gif,image/webp"
-              className="sr-only"
-              onChange={handleReceiptUpload}
-              disabled={receiptStatus === 'parsing'}
-            />
-          </label>
-          {receiptStatus === 'error' && (
-            <p className="mt-2 text-xs text-red-600">{receiptError}</p>
-          )}
-          {receiptResult && <ReceiptPanel receipt={receiptResult} fileName={receiptFileName} imageUrl={receiptImageUrl} />}
-        </div>
+        {!currentUser && (
+          <p className="mb-6 text-sm text-amber-600 dark:text-amber-400">You must be logged in to submit an expense.</p>
+        )}
+        {currentUser?.role === 'inactive' && (
+          <p className="mb-6 text-sm text-amber-600 dark:text-amber-400">Inactive users cannot create expense reports.</p>
+        )}
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-5 w-full max-w-sm">
-          <label className={labelClass}>
-            Amount ($)
-            <input
-              type="number"
-              name="amount"
-              value={form.amount}
-              onChange={handleChange}
-              min="0"
-              step="0.01"
-              required
-              placeholder="0.00"
-              className={inputClass}
-            />
-          </label>
+        <fieldset disabled={!currentUser || currentUser.role === 'inactive'} className="contents">
+          {/* Receipt upload */}
+          <div className="mb-8 w-full max-w-sm">
+            <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">Upload a receipt to auto-fill</p>
+            <label className="flex cursor-pointer items-center justify-center gap-2 rounded border-2 border-dashed border-zinc-300 dark:border-zinc-600 px-4 py-5 text-sm text-zinc-500 dark:text-zinc-400 hover:border-zinc-400 dark:hover:border-zinc-500 transition-colors disabled:cursor-not-allowed">
+              {receiptStatus === 'parsing' ? 'Parsing receipt…' : 'Choose image (JPEG, PNG, WebP)'}
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/jpeg,image/png,image/gif,image/webp"
+                className="sr-only"
+                onChange={handleReceiptUpload}
+                disabled={receiptStatus === 'parsing'}
+              />
+            </label>
+            {receiptStatus === 'error' && (
+              <p className="mt-2 text-xs text-red-600">{receiptError}</p>
+            )}
+            {receiptResult && <ReceiptPanel receipt={receiptResult} fileName={receiptFileName} imageUrl={receiptImageUrl} />}
+          </div>
 
-          <label className={labelClass}>
-            Category
-            <select
-              name="category"
-              value={form.category}
-              onChange={handleChange}
-              required
-              className={inputClass}
+          <form onSubmit={handleSubmit} className="flex flex-col gap-5 w-full max-w-sm">
+            <label className={labelClass}>
+              Amount ($)
+              <input
+                type="number"
+                name="amount"
+                value={form.amount}
+                onChange={handleChange}
+                min="0"
+                step="0.01"
+                required
+                placeholder="0.00"
+                className={inputClass}
+              />
+            </label>
+
+            <label className={labelClass}>
+              Category
+              <select
+                name="category"
+                value={form.category}
+                onChange={handleChange}
+                required
+                className={inputClass}
+              >
+                <option value="" disabled>Select a category</option>
+                {CATEGORIES.map((c) => (
+                  <option key={c} value={c}>{c.charAt(0).toUpperCase() + c.slice(1)}</option>
+                ))}
+              </select>
+            </label>
+
+            <label className={labelClass}>
+              Vendor
+              <input
+                type="text"
+                name="vendor"
+                value={form.vendor}
+                onChange={handleChange}
+                required
+                placeholder="e.g. Delta Airlines"
+                className={inputClass}
+              />
+            </label>
+
+            <label className={labelClass}>
+              Description
+              <textarea
+                name="description"
+                value={form.description}
+                onChange={handleChange}
+                required
+                rows={3}
+                placeholder="Brief description of the expense"
+                className={inputClass}
+              />
+            </label>
+
+            <label className="flex flex-row items-center gap-3 text-sm font-medium text-zinc-700 dark:text-zinc-300 cursor-pointer">
+              <input
+                type="checkbox"
+                name="chargeToClient"
+                checked={form.chargeToClient}
+                onChange={handleChange}
+                className="h-4 w-4 rounded border-zinc-300 accent-black dark:accent-white"
+              />
+              Charge to Client
+            </label>
+
+            <button
+              type="submit"
+              disabled={status === 'submitting'}
+              className="rounded bg-black text-white py-2 px-4 text-sm font-semibold hover:bg-zinc-800 disabled:opacity-50 dark:bg-white dark:text-black dark:hover:bg-zinc-200"
             >
-              <option value="" disabled>Select a category</option>
-              {CATEGORIES.map((c) => (
-                <option key={c} value={c}>{c.charAt(0).toUpperCase() + c.slice(1)}</option>
-              ))}
-            </select>
-          </label>
+              {status === 'submitting' ? 'Saving…' : 'Submit Expense'}
+            </button>
 
-          <label className={labelClass}>
-            Vendor
-            <input
-              type="text"
-              name="vendor"
-              value={form.vendor}
-              onChange={handleChange}
-              required
-              placeholder="e.g. Delta Airlines"
-              className={inputClass}
-            />
-          </label>
-
-          <label className={labelClass}>
-            Description
-            <textarea
-              name="description"
-              value={form.description}
-              onChange={handleChange}
-              required
-              rows={3}
-              placeholder="Brief description of the expense"
-              className={inputClass}
-            />
-          </label>
-
-          <label className="flex flex-row items-center gap-3 text-sm font-medium text-zinc-700 dark:text-zinc-300 cursor-pointer">
-            <input
-              type="checkbox"
-              name="chargeToClient"
-              checked={form.chargeToClient}
-              onChange={handleChange}
-              className="h-4 w-4 rounded border-zinc-300 accent-black dark:accent-white"
-            />
-            Charge to Client
-          </label>
-
-          {!currentUser && (
-            <p className="text-sm text-amber-600 dark:text-amber-400">You must be logged in to submit an expense.</p>
-          )}
-          {currentUser?.role === 'inactive' && (
-            <p className="text-sm text-amber-600 dark:text-amber-400">Inactive users cannot create expense reports.</p>
-          )}
-          <button
-            type="submit"
-            disabled={status === 'submitting' || !currentUser || currentUser.role === 'inactive'}
-            className="rounded bg-black text-white py-2 px-4 text-sm font-semibold hover:bg-zinc-800 disabled:opacity-50 dark:bg-white dark:text-black dark:hover:bg-zinc-200"
-          >
-            {status === 'submitting' ? 'Saving…' : 'Submit Expense'}
-          </button>
-
-          {status === 'error' && (
-            <p className="text-sm text-red-600">{errorMessage}</p>
-          )}
-        </form>
+            {status === 'error' && (
+              <p className="text-sm text-red-600">{errorMessage}</p>
+            )}
+          </form>
+        </fieldset>
 
         {status === 'success' && savedExpenseId && (
           <div className="mt-10 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 flex flex-col gap-2">
