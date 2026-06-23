@@ -20,11 +20,18 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    // Receipt already created the expense row — just stamp created_by
+    // Receipt already created the expense row — update all fields including created_by
     if (expense.expense_id) {
-      if (createdBy) {
-        await executeSql`UPDATE expenses SET created_by = ${createdBy} WHERE id = ${expense.expense_id}`
-      }
+      await executeSql`
+        UPDATE expenses
+        SET amount          = ${expense.amount},
+            category        = ${expense.category},
+            vendor          = ${expense.vendor},
+            description     = ${expense.description},
+            charge_to_client = ${expense.chargeToClient},
+            created_by      = ${createdBy}
+        WHERE id = ${expense.expense_id}
+      `
       return Response.json({ success: true, expense_id: expense.expense_id })
     }
 
