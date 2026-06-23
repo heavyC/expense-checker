@@ -37,7 +37,6 @@ export default function ExpensesPage() {
   const { currentUser, loading: userLoading } = useUser()
   const [rows, setRows] = useState<ExpenseRow[]>([])
   const [loading, setLoading] = useState(true)
-  const [submitting, setSubmitting] = useState<Record<number, boolean>>({})
   const [visibleTypes, setVisibleTypes] = useState(new Set(['APPROVED', 'FLAGGED', 'MANUAL_REVIEW', 'PENDING']))
 
   const isInactive = currentUser?.role === 'inactive'
@@ -51,18 +50,6 @@ export default function ExpensesPage() {
     })
   }
 
-  async function submitToCompliance(id: number) {
-    setSubmitting(prev => ({ ...prev, [id]: true }))
-    await fetch('/api/batch-analyze', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ expense_ids: [id] }),
-    })
-    const params = new URLSearchParams({ userId: String(currentUser!.id), role: currentUser!.role })
-    const data = await fetch(`/api/expenses/list?${params}`).then(r => r.json())
-    if (Array.isArray(data)) setRows(data)
-    setSubmitting(prev => ({ ...prev, [id]: false }))
-  }
 
   useEffect(() => {
     if (userLoading) return
@@ -178,19 +165,8 @@ export default function ExpensesPage() {
                     />
                   ) : (
                     <div className="border-t border-zinc-100 dark:border-zinc-800 pt-3 flex items-center gap-3">
-                      {isAdmin && !isCreator ? (
-                        <button
-                          onClick={() => submitToCompliance(row.id)}
-                          disabled={submitting[row.id]}
-                          className="rounded-full px-3 py-0.5 text-xs font-semibold bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 hover:bg-blue-200 dark:hover:bg-blue-800 disabled:opacity-50 transition-colors"
-                        >
-                          {submitting[row.id] ? 'Processing…' : 'Ready for Compliance'}
-                        </button>
-                      ) : isAdmin && isCreator ? (
-                        <span
-                          title="Admins cannot submit their own reports"
-                          className="rounded-full px-3 py-0.5 text-xs font-semibold bg-zinc-100 text-zinc-400 dark:bg-zinc-800 dark:text-zinc-500 cursor-not-allowed"
-                        >
+                      {isAdmin && isCreator ? (
+                        <span className="rounded-full px-3 py-0.5 text-xs font-semibold bg-zinc-100 text-zinc-400 dark:bg-zinc-800 dark:text-zinc-500">
                           Ready for Compliance
                         </span>
                       ) : (
