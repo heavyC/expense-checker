@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useUser, UserRole } from './UserContext'
 
 const USER_LINKS = [
@@ -43,6 +43,16 @@ export default function Header() {
   // Create user form state
   const [form, setForm] = useState({ firstName: '', lastName: '', loginId: '', role: 'active' as UserRole })
   const [userList, setUserList] = useState<{ login_id: string; role: UserRole; first_name: string; last_name: string }[]>([])
+
+  useEffect(() => {
+    if (loading || currentUser) return
+    setModal('login')
+    setError('')
+    setLoginId('')
+    fetch('/api/users').then(r => r.json()).then(data => {
+      setUserList(Array.isArray(data) ? data : [])
+    }).catch(() => {})
+  }, [loading, currentUser])
 
   async function openModal(m: Modal) {
     setModal(m); setError(''); setLoginId(''); setForm({ firstName: '', lastName: '', loginId: '', role: 'active' })
