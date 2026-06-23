@@ -40,7 +40,6 @@ export default function ExpensesPage() {
   const [visibleTypes, setVisibleTypes] = useState(new Set(['APPROVED', 'FLAGGED', 'MANUAL_REVIEW', 'PENDING']))
 
   const isInactive = currentUser?.role === 'inactive'
-  const isAdmin = currentUser?.role === 'admin'
 
   function toggleType(type: string) {
     setVisibleTypes(prev => {
@@ -165,15 +164,9 @@ export default function ExpensesPage() {
                     />
                   ) : (
                     <div className="border-t border-zinc-100 dark:border-zinc-800 pt-3 flex items-center gap-3">
-                      {isAdmin && isCreator ? (
-                        <span className="rounded-full px-3 py-0.5 text-xs font-semibold bg-zinc-100 text-zinc-400 dark:bg-zinc-800 dark:text-zinc-500">
-                          Ready for Compliance
-                        </span>
-                      ) : (
-                        <span className="rounded-full px-3 py-0.5 text-xs font-semibold bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
-                          Ready for Compliance
-                        </span>
-                      )}
+                      <span className="rounded-full px-3 py-0.5 text-xs font-semibold bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                        Ready for Compliance
+                      </span>
                       {isCreator && !isInactive && (
                         <a
                           href={`/expenses/${row.id}/edit`}
