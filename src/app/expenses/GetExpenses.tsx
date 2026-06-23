@@ -38,9 +38,18 @@ export default function ExpensesPage() {
   const [rows, setRows] = useState<ExpenseRow[]>([])
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState<Record<number, boolean>>({})
+  const [visibleTypes, setVisibleTypes] = useState(new Set(['APPROVED', 'FLAGGED', 'MANUAL_REVIEW', 'PENDING']))
 
   const isInactive = currentUser?.role === 'inactive'
   const isAdmin = currentUser?.role === 'admin'
+
+  function toggleType(type: string) {
+    setVisibleTypes(prev => {
+      const next = new Set(prev)
+      next.has(type) ? next.delete(type) : next.add(type)
+      return next
+    })
+  }
 
   async function submitToCompliance(id: number) {
     setSubmitting(prev => ({ ...prev, [id]: true }))
@@ -101,11 +110,28 @@ export default function ExpensesPage() {
           )}
         </div>
 
+        <div className="flex flex-wrap gap-2">
+          {[
+            { key: 'APPROVED',      label: 'Approved',              on: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',   off: 'bg-zinc-100 text-zinc-400 dark:bg-zinc-800 dark:text-zinc-500' },
+            { key: 'FLAGGED',       label: 'Flagged',               on: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',           off: 'bg-zinc-100 text-zinc-400 dark:bg-zinc-800 dark:text-zinc-500' },
+            { key: 'MANUAL_REVIEW', label: 'Manual Review',         on: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200', off: 'bg-zinc-100 text-zinc-400 dark:bg-zinc-800 dark:text-zinc-500' },
+            { key: 'PENDING',       label: 'Ready for Compliance',  on: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',       off: 'bg-zinc-100 text-zinc-400 dark:bg-zinc-800 dark:text-zinc-500' },
+          ].map(({ key, label, on, off }) => (
+            <button
+              key={key}
+              onClick={() => toggleType(key)}
+              className={`rounded-full px-3 py-1 text-xs font-semibold transition-colors ${visibleTypes.has(key) ? on : off}`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+
         {rows.length === 0 ? (
           <p className="text-sm text-zinc-500">No expenses submitted yet.</p>
         ) : (
           <div className="flex flex-col gap-4">
-            {rows.map((row) => {
+            {rows.filter(row => visibleTypes.has(row.verdict ?? 'PENDING')).map((row) => {
               const style = row.verdict ? (verdictStyles[row.verdict as Verdict] ?? verdictStyles.MANUAL_REVIEW) : null
               const confidencePct = row.confidence ? Math.round(parseFloat(row.confidence) * 100) : null
               const accuracyPct = row.receipt_accuracy ? Math.round(parseFloat(row.receipt_accuracy) * 100) : null
