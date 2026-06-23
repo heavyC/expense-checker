@@ -12,7 +12,7 @@ interface Expense {
 }
 
 interface AnalysisResult {
-  verdict: 'APPROVED' | 'FLAGGED' | 'MANUAL_REVIEW'
+  verdict: 'APPROVED' | 'FLAGGED'
   reasoning: string
   policy_citations: string[]
   confidence: number
@@ -47,8 +47,7 @@ const empty: Expense = {
 
 const verdictStyles: Record<AnalysisResult['verdict'], { bar: string; badge: string; label: string }> = {
   APPROVED:     { bar: 'bg-green-500',  badge: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',  label: 'Approved' },
-  FLAGGED:      { bar: 'bg-red-500',    badge: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',          label: 'Flagged' },
-  MANUAL_REVIEW: { bar: 'bg-yellow-400', badge: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200', label: 'Manual Review' },
+  FLAGGED:      { bar: 'bg-red-500',    badge: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',          label: 'Flagged for Manual Review' },
 }
 
 function ConfidenceBar({ pct, barColor }: { pct: number; barColor: string }) {
@@ -104,7 +103,7 @@ function ReceiptPanel({ receipt, fileName, imageUrl }: { receipt: ReceiptResult;
 }
 
 function ResultPanel({ result }: { result: AnalysisResult }) {
-  const style = verdictStyles[result.verdict] ?? verdictStyles.MANUAL_REVIEW
+  const style = verdictStyles[result.verdict] ?? verdictStyles.FLAGGED
   const pct = Math.round(result.confidence * 100)
 
   return (

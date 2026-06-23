@@ -44,7 +44,7 @@ CREATE TABLE users (
 CREATE TABLE expense_analyses (
     id               SERIAL        PRIMARY KEY,
     expense_id       INTEGER       NOT NULL REFERENCES expenses(id) ON DELETE CASCADE,
-    verdict          VARCHAR(20)   NOT NULL CHECK (verdict IN ('APPROVED', 'FLAGGED', 'MANUAL_REVIEW')),
+    verdict          VARCHAR(20)   NOT NULL CHECK (verdict IN ('APPROVED', 'FLAGGED')),
     reasoning        TEXT          NOT NULL,
     policy_citations JSONB         NOT NULL DEFAULT '[]',
     confidence       NUMERIC(4, 3) NOT NULL,

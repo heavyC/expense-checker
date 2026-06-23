@@ -14,7 +14,7 @@ from chroma_utils import get_current_policy_version
 class ExpenseState(TypedDict):
     expense: dict           # submitted expense data
     policy_excerpts: list   # retrieved from RAG
-    verdict: str            # APPROVED / FLAGGED / MANUAL_REVIEW
+    verdict: str            # APPROVED / FLAGGED
     reasoning: str          # explanation
     policy_citations: list  # which policy sections apply
     confidence: float       # 0-1
@@ -94,7 +94,7 @@ def analyzeExpense(expenseDict: dict) -> dict:
         analysis = json.loads(response_text)
     except json.JSONDecodeError:
         analysis = {
-            "verdict": "MANUAL_REVIEW",
+            "verdict": "FLAGGED",
             "reasoning": response_text,
             "policy_citations": [],
             "confidence": 0.5,
@@ -103,7 +103,7 @@ def analyzeExpense(expenseDict: dict) -> dict:
     return ExpenseState(
         expense=expenseDict,
         policy_excerpts=[e["text"] for e in policy_excerpts],
-        verdict=analysis.get("verdict", "MANUAL_REVIEW"),
+        verdict=analysis.get("verdict", "FLAGGED"),
         reasoning=analysis.get("reasoning", ""),
         policy_citations=analysis.get("policy_citations", []),
         confidence=float(analysis.get("confidence", 0.5)),

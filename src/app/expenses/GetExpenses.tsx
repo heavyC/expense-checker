@@ -6,8 +6,7 @@ import ExpandableAnalysis from './ExpandableAnalysis'
 
 const verdictStyles = {
   APPROVED:     { badge: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',     label: 'Approved' },
-  FLAGGED:      { badge: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',             label: 'Flagged' },
-  MANUAL_REVIEW: { badge: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200', label: 'Manual Review' },
+  FLAGGED:      { badge: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',             label: 'Flagged for Manual Review' },
 } as const
 
 type Verdict = keyof typeof verdictStyles
@@ -37,7 +36,7 @@ export default function ExpensesPage() {
   const { currentUser, loading: userLoading } = useUser()
   const [rows, setRows] = useState<ExpenseRow[]>([])
   const [loading, setLoading] = useState(true)
-  const [visibleTypes, setVisibleTypes] = useState(new Set(['APPROVED', 'FLAGGED', 'MANUAL_REVIEW', 'PENDING']))
+  const [visibleTypes, setVisibleTypes] = useState(new Set(['APPROVED', 'FLAGGED', 'PENDING']))
 
   const isInactive = currentUser?.role === 'inactive'
 
@@ -99,9 +98,8 @@ export default function ExpensesPage() {
         <div className="flex flex-wrap gap-2">
           {[
             { key: 'APPROVED',      label: 'Approved',              on: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',   off: 'bg-zinc-100 text-zinc-400 dark:bg-zinc-800 dark:text-zinc-500' },
-            { key: 'FLAGGED',       label: 'Flagged',               on: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',           off: 'bg-zinc-100 text-zinc-400 dark:bg-zinc-800 dark:text-zinc-500' },
-            { key: 'MANUAL_REVIEW', label: 'Manual Review',         on: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200', off: 'bg-zinc-100 text-zinc-400 dark:bg-zinc-800 dark:text-zinc-500' },
-            { key: 'PENDING',       label: 'Ready for Compliance',  on: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',       off: 'bg-zinc-100 text-zinc-400 dark:bg-zinc-800 dark:text-zinc-500' },
+            { key: 'FLAGGED',       label: 'Flagged for Manual Review',               on: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',           off: 'bg-zinc-100 text-zinc-400 dark:bg-zinc-800 dark:text-zinc-500' },
+{ key: 'PENDING',       label: 'Ready for Compliance',  on: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',       off: 'bg-zinc-100 text-zinc-400 dark:bg-zinc-800 dark:text-zinc-500' },
           ].map(({ key, label, on, off }) => (
             <button
               key={key}
@@ -118,7 +116,7 @@ export default function ExpensesPage() {
         ) : (
           <div className="flex flex-col gap-4">
             {rows.filter(row => visibleTypes.has(row.verdict ?? 'PENDING')).map((row) => {
-              const style = row.verdict ? (verdictStyles[row.verdict as Verdict] ?? verdictStyles.MANUAL_REVIEW) : null
+              const style = row.verdict ? (verdictStyles[row.verdict as Verdict] ?? verdictStyles.FLAGGED) : null
               const confidencePct = row.confidence ? Math.round(parseFloat(row.confidence) * 100) : null
               const accuracyPct = row.receipt_accuracy ? Math.round(parseFloat(row.receipt_accuracy) * 100) : null
               const isCreator = currentUser.id === row.created_by
