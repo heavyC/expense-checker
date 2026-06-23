@@ -7,12 +7,14 @@ import { useUser, UserRole } from './UserContext'
 
 const USER_LINKS = [
   { href: '/',            label: 'Home' },
-  { href: '/add-expense', label: 'Add Expense' },
-  { href: '/expenses',    label: 'View Expense Reports' },
+  { href: '/add-expense', label: 'Add Expense Report' },
+  { href: '/expenses',    label: 'View Expenses Report' },
 ]
 
 const ADMIN_LINKS = [
-  { href: '/review',         label: 'Ready for Compliance Review' },
+  { href: '/review',         label: 'Ready for Compliance Check' },
+  { href: '/manual-review',  label: 'Needs Manual Review' },
+  { href: '/completed',      label: 'Completed' },
   { href: '/add-policy',     label: 'Upload a New Policy Document' },
   { href: '/policies',       label: 'View All Expense Policy Docs' },
   { href: '/update-prompts', label: 'View & Update Prompts' },
@@ -40,8 +42,15 @@ export default function Header() {
 
   // Create user form state
   const [form, setForm] = useState({ firstName: '', lastName: '', loginId: '', role: 'active' as UserRole })
+  const [userList, setUserList] = useState<{ login_id: string; role: UserRole; first_name: string; last_name: string }[]>([])
 
-  function openModal(m: Modal) { setModal(m); setError(''); setLoginId(''); setForm({ firstName: '', lastName: '', loginId: '', role: 'active' }) }
+  async function openModal(m: Modal) {
+    setModal(m); setError(''); setLoginId(''); setForm({ firstName: '', lastName: '', loginId: '', role: 'active' })
+    if (m === 'login') {
+      const data = await fetch('/api/users').then(r => r.json()).catch(() => [])
+      setUserList(Array.isArray(data) ? data : [])
+    }
+  }
   function closeModal() { setModal(null); setError('') }
 
   async function handleLogin(e: React.SyntheticEvent) {
@@ -137,18 +146,40 @@ export default function Header() {
           <div className="w-full max-w-sm rounded-xl bg-white dark:bg-zinc-950 p-6 shadow-xl" onClick={e => e.stopPropagation()}>
 
             {modal === 'login' && (
-              <form onSubmit={handleLogin} className="flex flex-col gap-4">
-                <h2 className="text-lg font-semibold">Login</h2>
-                <div className="flex flex-col gap-1">
-                  <label className="text-xs text-zinc-500 uppercase tracking-wide">Login ID</label>
-                  <input className={inputCls} value={loginId} onChange={e => setLoginId(e.target.value)} autoFocus required />
-                </div>
-                {error && <p className="text-sm text-red-600">{error}</p>}
-                <div className="flex gap-2 justify-end">
-                  <button type="button" onClick={closeModal} className={btnGhost}>Cancel</button>
-                  <button type="submit" disabled={submitting} className={btnPrimary}>{submitting ? 'Logging in…' : 'Login'}</button>
-                </div>
-              </form>
+              <div className="flex flex-col gap-4">
+                <form onSubmit={handleLogin} className="flex flex-col gap-4">
+                  <h2 className="text-lg font-semibold">Login</h2>
+                  <div className="flex flex-col gap-1">
+                    <label className="text-xs text-zinc-500 uppercase tracking-wide">Login ID</label>
+                    <input className={inputCls} value={loginId} onChange={e => setLoginId(e.target.value)} autoFocus required />
+                  </div>
+                  {error && <p className="text-sm text-red-600">{error}</p>}
+                  <div className="flex gap-2 justify-end">
+                    <button type="button" onClick={closeModal} className={btnGhost}>Cancel</button>
+                    <button type="submit" disabled={submitting} className={btnPrimary}>{submitting ? 'Logging in…' : 'Login'}</button>
+                  </div>
+                </form>
+                {userList.length > 0 && (
+                  <div className="border-t border-zinc-100 dark:border-zinc-800 pt-3 flex flex-col gap-1">
+                    <p className="text-xs text-zinc-400 uppercase tracking-wide mb-1">Available users</p>
+                    {userList.map(u => (
+                      <button
+                        key={u.login_id}
+                        type="button"
+                        onClick={() => setLoginId(u.login_id)}
+                        className="flex items-center justify-between rounded px-3 py-1.5 text-sm hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors text-left"
+                      >
+                        <span className="text-zinc-700 dark:text-zinc-300">
+                          {u.first_name} {u.last_name} <span className="text-zinc-400">· {u.login_id}</span>
+                        </span>
+                        <span className={`rounded-full px-2 py-0.5 text-xs font-semibold capitalize ${ROLE_BADGE[u.role]}`}>
+                          {u.role}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
             )}
 
             {modal === 'create' && (

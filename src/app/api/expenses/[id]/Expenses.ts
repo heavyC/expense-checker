@@ -30,7 +30,21 @@ export async function PATCH(
   try {
     let row
 
-    if ('approved_by_manager' in body) {
+    if ('manual_approval' in body) {
+      if (typeof body.manual_approval !== 'boolean') {
+        return Response.json({ error: 'manual_approval must be a boolean' }, { status: 400 })
+      }
+      const verdict = body.manual_approval ? 'APPROVED' : 'DENIED'
+      await executeSql`UPDATE expenses SET manual_approval = ${body.manual_approval} WHERE id = ${expenseId}`
+      ;[row] = await executeSql`
+        UPDATE expense_analyses
+        SET verdict = ${verdict}
+        WHERE expense_id = ${expenseId}
+        RETURNING id
+      `
+      if (!row) return Response.json({ error: 'No analysis found for this expense' }, { status: 404 })
+      return Response.json({ success: true, verdict })
+    } else if ('approved_by_manager' in body) {
       if (typeof body.approved_by_manager !== 'boolean') {
         return Response.json({ error: 'approved_by_manager must be a boolean' }, { status: 400 })
       }

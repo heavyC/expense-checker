@@ -47,7 +47,7 @@ const empty: Expense = {
 
 const verdictStyles: Record<AnalysisResult['verdict'], { bar: string; badge: string; label: string }> = {
   APPROVED:     { bar: 'bg-green-500',  badge: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',  label: 'Approved' },
-  FLAGGED:      { bar: 'bg-red-500',    badge: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',          label: 'Flagged for Manual Review' },
+  FLAGGED:      { bar: 'bg-orange-500',  badge: 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200', label: 'Flagged for Manual Review' },
 }
 
 function ConfidenceBar({ pct, barColor }: { pct: number; barColor: string }) {

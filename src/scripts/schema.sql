@@ -24,6 +24,7 @@ CREATE TABLE expenses (
     approved_by_manager BOOLEAN        NOT NULL DEFAULT FALSE,
     approved_by         INTEGER        REFERENCES users(id),
     created_by          INTEGER        NOT NULL REFERENCES users(id),
+    manual_approval     BOOLEAN,
     submitted_at        TIMESTAMPTZ    NOT NULL DEFAULT NOW()
 );
 
@@ -44,7 +45,7 @@ CREATE TABLE users (
 CREATE TABLE expense_analyses (
     id               SERIAL        PRIMARY KEY,
     expense_id       INTEGER       NOT NULL REFERENCES expenses(id) ON DELETE CASCADE,
-    verdict          VARCHAR(20)   NOT NULL CHECK (verdict IN ('APPROVED', 'FLAGGED')),
+    verdict          VARCHAR(20)   NOT NULL CHECK (verdict IN ('APPROVED', 'FLAGGED', 'DENIED')),
     reasoning        TEXT          NOT NULL,
     policy_citations JSONB         NOT NULL DEFAULT '[]',
     confidence       NUMERIC(4, 3) NOT NULL,

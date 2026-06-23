@@ -3,18 +3,24 @@ import { executeSql } from '../../../lib/db'
 
 export async function GET(request: NextRequest) {
   const loginId = request.nextUrl.searchParams.get('loginId')
-  if (!loginId) {
-    return Response.json({ error: 'loginId query param required' }, { status: 400 })
-  }
 
   try {
-    const [user] = await executeSql`
-      SELECT id, first_name, last_name, login_id, role
+    if (loginId) {
+      const [user] = await executeSql`
+        SELECT id, first_name, last_name, login_id, role
+        FROM users
+        WHERE login_id = ${loginId}
+      `
+      if (!user) return Response.json({ error: 'User not found' }, { status: 404 })
+      return Response.json(user)
+    }
+
+    const users = await executeSql`
+      SELECT first_name, last_name, login_id, role
       FROM users
-      WHERE login_id = ${loginId}
+      ORDER BY role, last_name, first_name
     `
-    if (!user) return Response.json({ error: 'User not found' }, { status: 404 })
-    return Response.json(user)
+    return Response.json(users)
   } catch (err) {
     return Response.json({ error: String(err) }, { status: 500 })
   }

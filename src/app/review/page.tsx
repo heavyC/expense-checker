@@ -23,7 +23,7 @@ export default async function Review() {
       <main className="w-full max-w-4xl mx-auto py-12 px-6 flex flex-col gap-6">
         <div className="flex flex-col gap-1">
           <h1 className="text-3xl font-semibold tracking-tight text-black dark:text-white">
-            Review
+            Ready for Compliance Check
           </h1>
           <p className="text-sm text-zinc-500">
             Expenses waiting for compliance analysis. Select the ones you want to submit.

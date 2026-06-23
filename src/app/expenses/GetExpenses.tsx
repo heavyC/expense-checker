@@ -6,7 +6,7 @@ import ExpandableAnalysis from './ExpandableAnalysis'
 
 const verdictStyles = {
   APPROVED:     { badge: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',     label: 'Approved' },
-  FLAGGED:      { badge: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',             label: 'Flagged for Manual Review' },
+  FLAGGED:      { badge: 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200',   label: 'Flagged for Manual Review' },
 } as const
 
 type Verdict = keyof typeof verdictStyles
@@ -98,7 +98,7 @@ export default function ExpensesPage() {
         <div className="flex flex-wrap gap-2">
           {[
             { key: 'APPROVED',      label: 'Approved',              on: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',   off: 'bg-zinc-100 text-zinc-400 dark:bg-zinc-800 dark:text-zinc-500' },
-            { key: 'FLAGGED',       label: 'Flagged for Manual Review',               on: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',           off: 'bg-zinc-100 text-zinc-400 dark:bg-zinc-800 dark:text-zinc-500' },
+            { key: 'FLAGGED',       label: 'Flagged for Manual Review',  on: 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200', off: 'bg-zinc-100 text-zinc-400 dark:bg-zinc-800 dark:text-zinc-500' },
 { key: 'PENDING',       label: 'Ready for Compliance',  on: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',       off: 'bg-zinc-100 text-zinc-400 dark:bg-zinc-800 dark:text-zinc-500' },
           ].map(({ key, label, on, off }) => (
             <button
