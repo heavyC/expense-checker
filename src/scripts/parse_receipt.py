@@ -7,7 +7,7 @@ load_dotenv()
 
 import anthropic
 
-from prompts import RECEIPT_PARSING_PROMPT
+from prompts import DEFAULT_RECEIPT_PARSING_PROMPT
 
 VALID_CATEGORIES = ['meals', 'travel', 'lodging', 'software', 'equipment', 'other']
 
@@ -29,7 +29,7 @@ def parse_receipt(image_path: str, prompt: str | None = None) -> dict:
 
     client = anthropic.Anthropic()
 
-    prompt = prompt or RECEIPT_PARSING_PROMPT
+    prompt = prompt or DEFAULT_RECEIPT_PARSING_PROMPT
 
     response = client.messages.create(
         model="claude-opus-4-8",

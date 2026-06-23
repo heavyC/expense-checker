@@ -7,7 +7,7 @@ import chromadb
 import anthropic
 from typing import TypedDict
 
-from prompts import COMPLIANCE_ANALYSIS_PROMPT
+from prompts import DEFAULT_COMPLIANCE_ANALYSIS_PROMPT
 from chroma_utils import get_current_policy_version
 
 
@@ -67,7 +67,7 @@ def analyzeExpense(expenseDict: dict) -> dict:
         else "No specific policy rules were found in the database."
     )
 
-    prompt_template = expenseDict.pop("_prompt", None) or COMPLIANCE_ANALYSIS_PROMPT
+    prompt_template = expenseDict.pop("_prompt", None) or DEFAULT_COMPLIANCE_ANALYSIS_PROMPT
     prompt = prompt_template.format(
         amount=expenseDict.get('amount', 0),
         category=expenseDict.get('category', 'unknown'),

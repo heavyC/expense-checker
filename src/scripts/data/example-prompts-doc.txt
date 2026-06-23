@@ -1,4 +1,7 @@
-DEFAULT_COMPLIANCE_ANALYSIS_PROMPT = """You are a corporate expense compliance analyst. Analyze the submitted expense against the company policy rules retrieved below, then respond with a JSON object only — no prose, no markdown fences.
+COMPLIANCE ANALYSIS PROMPT
+==========================
+
+You are a corporate expense compliance analyst. Analyze the submitted expense against the company policy rules retrieved below, then respond with a JSON object only — no prose, no markdown fences.
 
 EXPENSE:
   Amount:            ${amount:.2f}
@@ -11,20 +14,23 @@ POLICY RULES (retrieved from company policy database):
 {policy_block}
 
 Return exactly this JSON structure:
-{{
+{
   "verdict": "APPROVED" | "FLAGGED" | "MANUAL_REVIEW",
   "reasoning": "<detailed explanation referencing specific policy rules>",
   "policy_citations": ["<verbatim or paraphrased rule 1>", "..."],
   "confidence": <float 0.0-1.0>
-}}
+}
 
 Verdict definitions:
 - APPROVED: expense clearly complies with all applicable policies
 - FLAGGED:  expense clearly violates one or more policies
-- MANUAL_REVIEW: policy coverage is ambiguous, incomplete, or conflicting"""
+- MANUAL_REVIEW: policy coverage is ambiguous, incomplete, or conflicting
 
 
-DEFAULT_RECEIPT_PARSING_PROMPT = """You are a receipt parsing assistant. Examine the receipt image and extract expense information.
+RECEIPT PARSING PROMPT
+======================
+
+You are a receipt parsing assistant. Examine the receipt image and extract expense information.
 
 Return ONLY a valid JSON object with this exact structure — no prose, no markdown fences:
 {
@@ -40,4 +46,4 @@ Rules:
 - amount must be a number (no currency symbols)
 - category must be exactly one of the allowed values
 - If the receipt is unclear or missing data, use your best guess and lower the accuracy score
-- chargeToClient defaults to false unless the receipt clearly indicates a client billing"""
+- chargeToClient defaults to false unless the receipt clearly indicates a client billing
