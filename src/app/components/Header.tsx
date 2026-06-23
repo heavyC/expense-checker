@@ -6,8 +6,9 @@ import { useState, useEffect } from 'react'
 import { useUser, UserRole } from './UserContext'
 
 const USER_LINKS = [
-  { href: '/',            label: 'Home' },
-  { href: '/add-expense', label: 'Add Expense Report' },
+  { href: '/',              label: 'Docs' },
+  { href: '/architecture',  label: 'Architecture' },
+  { href: '/add-expense',   label: 'Add Expense Report' },
   { href: '/expenses',    label: 'View Expenses Report' },
 ]
 
