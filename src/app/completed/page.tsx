@@ -6,11 +6,13 @@ export default async function CompletedPage() {
            e.charge_to_client, e.approved_by_manager, e.submitted_at,
            u.first_name || ' ' || u.last_name AS creator_name,
            ap.first_name || ' ' || ap.last_name AS approver_name,
+           fr.first_name || ' ' || fr.last_name AS final_reviewer_name,
            a.reasoning, a.policy_citations, a.confidence, a.analyzed_at, a.verdict
     FROM expenses e
     JOIN expense_analyses a ON a.expense_id = e.id
     LEFT JOIN users u ON u.id = e.created_by
     LEFT JOIN users ap ON ap.id = e.approved_by
+    LEFT JOIN users fr ON fr.id = e.final_review_by
     WHERE a.verdict IN ('APPROVED', 'DENIED')
     ORDER BY a.analyzed_at DESC
   `
@@ -67,6 +69,12 @@ export default async function CompletedPage() {
                       <>
                         <span>·</span>
                         <span>Reviewed by {exp.approver_name}</span>
+                      </>
+                    )}
+                    {exp.final_reviewer_name && (
+                      <>
+                        <span>·</span>
+                        <span>Final review by {exp.final_reviewer_name}</span>
                       </>
                     )}
                     {exp.approved_by_manager && (

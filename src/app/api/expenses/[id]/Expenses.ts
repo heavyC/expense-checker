@@ -35,7 +35,8 @@ export async function PATCH(
         return Response.json({ error: 'manual_approval must be a boolean' }, { status: 400 })
       }
       const verdict = body.manual_approval ? 'APPROVED' : 'DENIED'
-      await executeSql`UPDATE expenses SET manual_approval = ${body.manual_approval} WHERE id = ${expenseId}`
+      const finalReviewBy = body.final_review_by != null ? parseInt(body.final_review_by) : null
+      await executeSql`UPDATE expenses SET manual_approval = ${body.manual_approval}, final_review_by = ${finalReviewBy} WHERE id = ${expenseId}`
       ;[row] = await executeSql`
         UPDATE expense_analyses
         SET verdict = ${verdict}

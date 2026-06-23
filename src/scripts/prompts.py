@@ -6,6 +6,7 @@ EXPENSE:
   Vendor:            {vendor}
   Description:       {description}
   Charge to Client:  {charge_to_client}
+  Manager Approved:  {approved_by_manager}
 
 POLICY RULES (retrieved from company policy database):
 {policy_block}

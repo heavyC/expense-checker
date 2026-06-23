@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
+import { useUser } from '../components/UserContext'
 
 interface FlaggedExpense {
   id: number
@@ -19,6 +20,7 @@ interface FlaggedExpense {
 
 export default function ManualReviewPage({ expenses }: { expenses: FlaggedExpense[] }) {
   const router = useRouter()
+  const { currentUser } = useUser()
   const [acting, setActing] = useState<Record<number, boolean>>({})
   const [expanded, setExpanded] = useState<Set<number>>(new Set())
 
@@ -35,7 +37,7 @@ export default function ManualReviewPage({ expenses }: { expenses: FlaggedExpens
     await fetch(`/api/expenses/${id}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ manual_approval: approved }),
+      body: JSON.stringify({ manual_approval: approved, final_review_by: currentUser?.id ?? null }),
     })
     setActing(prev => ({ ...prev, [id]: false }))
     router.refresh()

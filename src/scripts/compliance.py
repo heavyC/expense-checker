@@ -74,6 +74,7 @@ def analyzeExpense(expenseDict: dict) -> dict:
         vendor=expenseDict.get('vendor', 'unknown'),
         description=expenseDict.get('description', ''),
         charge_to_client=expenseDict.get('chargeToClient', False),
+        approved_by_manager=expenseDict.get('approvedByManager', False),
         policy_block=policy_block,
     )
 

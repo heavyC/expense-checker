@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
   for (const expense_id of expense_ids) {
     try {
       const rows = await executeSql`
-        SELECT id, amount, category, vendor, description, charge_to_client
+        SELECT id, amount, category, vendor, description, charge_to_client, approved_by_manager
         FROM expenses
         WHERE id = ${expense_id}
       `
@@ -30,6 +30,7 @@ export async function POST(request: NextRequest) {
         vendor: row.vendor,
         description: row.description,
         chargeToClient: row.charge_to_client,
+        approvedByManager: row.approved_by_manager,
       }
 
       const raw = await runPython(expense)

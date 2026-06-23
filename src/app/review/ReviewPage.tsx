@@ -36,12 +36,21 @@ export default function ReviewPage({ expenses, adminUsers }: { expenses: Pending
   )
 
   async function toggleManagerApproval(id: number, value: boolean) {
+    const approverId = value ? (currentUser?.id ?? null) : null
     setManagerApproved(prev => ({ ...prev, [id]: value }))
-    await fetch(`/api/expenses/${id}`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ approved_by_manager: value }),
-    })
+    setApprovedBy(prev => ({ ...prev, [id]: approverId }))
+    await Promise.all([
+      fetch(`/api/expenses/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ approved_by_manager: value }),
+      }),
+      fetch(`/api/expenses/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ approved_by: approverId }),
+      }),
+    ])
   }
 
   async function setApprover(id: number, userId: number | null) {
@@ -201,20 +210,13 @@ export default function ReviewPage({ expenses, adminUsers }: { expenses: Pending
                 />
                 Approved by Manager
               </label>
-              <div className="flex flex-col gap-0.5" onClick={e => e.stopPropagation()}>
+              <div className="flex flex-col gap-0.5">
                 <span className="text-xs text-zinc-400">Approved By</span>
-                <select
-                  value={approvedBy[exp.id] ?? ''}
-                  onChange={e => setApprover(exp.id, e.target.value ? parseInt(e.target.value) : null)}
-                  className="rounded border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-2 py-1 text-xs focus:outline-none"
-                >
-                  <option value="">— None —</option>
-                  {adminUsers.map(u => (
-                    <option key={u.id} value={u.id}>
-                      {u.first_name} {u.last_name}
-                    </option>
-                  ))}
-                </select>
+                <span className="text-xs text-zinc-600 dark:text-zinc-300">
+                  {approvedBy[exp.id]
+                    ? (() => { const u = adminUsers.find(u => u.id === approvedBy[exp.id]); return u ? `${u.first_name} ${u.last_name}` : '—' })()
+                    : '—'}
+                </span>
               </div>
             </div>
           </label>
