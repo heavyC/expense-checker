@@ -3,8 +3,10 @@
     "target": "ES2017",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
-    "skipLibCheck": true,
+    // "skipLibCheck": true, // for faster deploys
+    "skipLibCheck": false,
     "strict": true,
+    "strictNullChecks": true, // ← Also add this
     "noEmit": true,
     "esModuleInterop": true,
     "module": "esnext",
