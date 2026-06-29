@@ -11,7 +11,8 @@ export async function GET(request: NextRequest) {
         SELECT id, first_name, last_name, login_id, role
         FROM users
         WHERE login_id = ${loginId}
-      `
+      ` as unknown as Record<string, any>[]
+
       if (!user) return Response.json({ error: 'User not found' }, { status: 404 })
       return Response.json(user)
     }
@@ -45,7 +46,8 @@ export async function POST(request: NextRequest) {
       INSERT INTO users (first_name, last_name, login_id, role)
       VALUES (${firstName}, ${lastName}, ${loginId}, ${role}::user_role)
       RETURNING id, first_name, last_name, login_id, role
-    `
+    ` as unknown as Record<string, any>[]
+    
     return Response.json(user, { status: 201 })
   } catch (err: unknown) {
     const msg = String(err)
