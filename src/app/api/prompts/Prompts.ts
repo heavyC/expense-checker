@@ -23,12 +23,13 @@ export async function PATCH(request: NextRequest) {
   }
 
   try {
-    const row = await executeSql`
+    const [row] = await executeSql`
       UPDATE prompts
       SET body = ${body}, version = version + 1, updated_at = NOW()
       WHERE name = ${name} AND is_active = TRUE
       RETURNING id, name, body, description, version, updated_at
-    `
+    ` as unknown as Record<string, any>[]
+    
     if (!row) return Response.json({ error: 'Prompt not found' }, { status: 404 })
     return Response.json(row)
   } catch (err) {

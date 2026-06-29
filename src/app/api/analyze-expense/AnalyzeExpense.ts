@@ -1,7 +1,6 @@
 import { NextRequest } from 'next/server'
 import { spawn } from 'child_process'
 import { join } from 'path'
-// import { executeSql } from '../../../lib/db'
 import { getDb } from '../../../lib/db'
 const executeSql = getDb();
 
@@ -18,7 +17,7 @@ export async function POST(request: NextRequest) {
   try {
     const [promptRow] = await executeSql`
       SELECT body FROM prompts WHERE name = 'compliance_analysis' AND is_active = TRUE
-    `
+    ` as unknown as Record<string, any>[]
     if (promptRow) expense._prompt = promptRow.body
 
     const raw = await runPython(expense)

@@ -8,11 +8,12 @@ export async function GET(
 ) {
   const { id } = await params
   try {
-    const row = await executeSql`
+    const [row] = await executeSql`
       SELECT id, amount, category, vendor, description, charge_to_client, created_by
       FROM expenses
       WHERE id = ${parseInt(id)}
-    `
+    ` as unknown as Record<string, any>[]
+
     if (!row) return Response.json({ error: 'Expense not found' }, { status: 404 })
     return Response.json(row)
   } catch (err) {
