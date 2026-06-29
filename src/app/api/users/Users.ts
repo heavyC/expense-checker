@@ -21,7 +21,8 @@ export async function GET(request: NextRequest) {
       SELECT first_name, last_name, login_id, role
       FROM users
       ORDER BY role, last_name, first_name
-    `
+    ` as unknown as Record<string, any>[]
+    
     return Response.json(users)
   } catch (err) {
     return Response.json({ error: String(err) }, { status: 500 })
@@ -47,7 +48,7 @@ export async function POST(request: NextRequest) {
       VALUES (${firstName}, ${lastName}, ${loginId}, ${role}::user_role)
       RETURNING id, first_name, last_name, login_id, role
     ` as unknown as Record<string, any>[]
-    
+
     return Response.json(user, { status: 201 })
   } catch (err: unknown) {
     const msg = String(err)
