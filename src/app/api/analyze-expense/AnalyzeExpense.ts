@@ -35,7 +35,8 @@ export async function POST(request: NextRequest) {
         VALUES (${expense.amount}, ${expense.category}, ${expense.vendor},
                 ${expense.description}, ${expense.chargeToClient})
         RETURNING id
-      `
+      ` as unknown as Record<string, any>[]
+      
       expenseId = row.id
     }
 
