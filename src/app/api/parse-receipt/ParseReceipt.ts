@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
   const tmpPath = join(tmpdir(), `receipt-${Date.now()}.${ext}`)
 
   if (createdBy) {
-    const [user] = await executeSql`SELECT role FROM users WHERE id = ${createdBy}`
+    const [user] = await executeSql`SELECT role FROM users WHERE id = ${createdBy}`  as unknown as Record<string, any>[]
     if (!user) return Response.json({ error: 'User not found' }, { status: 400 })
     if (user.role === 'inactive') return Response.json({ error: 'Inactive users cannot create expense reports' }, { status: 403 })
   }
@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
 
     const [promptRow] = await executeSql`
       SELECT body FROM prompts WHERE name = 'receipt_parsing' AND is_active = TRUE
-    `
+    ` as unknown as Record<string, any>[]
     const prompt = promptRow?.body ?? null
 
     const raw = await runPython(tmpPath, prompt)
@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
       VALUES (${result.amount}, ${result.category}, ${result.vendor},
               ${result.description}, ${result.chargeToClient}, ${result.accuracy}, ${createdBy})
       RETURNING id
-    `
+    ` as unknown as Record<string, any>[]
 
     return Response.json({ success: true, result, fileName: file.name, expense_id: row.id })
   } catch (err) {

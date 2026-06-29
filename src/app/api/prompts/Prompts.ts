@@ -9,7 +9,8 @@ export async function GET() {
       FROM prompts
       WHERE is_active = TRUE
       ORDER BY name
-    `
+    ` as unknown as Record<string, any>[]
+    
     return Response.json(rows)
   } catch (err) {
     return Response.json({ error: String(err) }, { status: 500 })

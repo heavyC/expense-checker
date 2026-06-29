@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
           LEFT JOIN users u ON u.id = e.approved_by
           LEFT JOIN users c ON c.id = e.created_by
           ORDER BY e.submitted_at DESC
-        `
+        ` as unknown as Record<string, any>[]
       : await executeSql`
           SELECT
             e.id, e.amount, e.category, e.vendor, e.description,
@@ -34,7 +34,7 @@ export async function GET(request: NextRequest) {
           LEFT JOIN users c ON c.id = e.created_by
           WHERE e.created_by = ${userId ? parseInt(userId) : -1}
           ORDER BY e.submitted_at DESC
-        `
+        ` as unknown as Record<string, any>[]
 
     return Response.json(rows)
   } catch (err) {

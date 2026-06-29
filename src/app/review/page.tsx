@@ -13,10 +13,10 @@ export default async function Review() {
       LEFT JOIN users u ON u.id = e.created_by
       WHERE a.id IS NULL
       ORDER BY e.submitted_at DESC
-    `,
+    ` as unknown as Record<string, any>[],
     executeSql`
       SELECT id, first_name, last_name FROM users WHERE role = 'admin' ORDER BY last_name, first_name
-    `,
+    ` as unknown as Record<string, any>[],
   ])
 
   return (

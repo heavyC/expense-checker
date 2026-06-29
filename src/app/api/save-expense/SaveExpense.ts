@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
   const createdBy: number | null = expense.created_by ? parseInt(expense.created_by) : null
 
   if (createdBy) {
-    const [user] = await executeSql`SELECT role FROM users WHERE id = ${createdBy}`
+    const [user] = await executeSql`SELECT role FROM users WHERE id = ${createdBy}` as unknown as Record<string, any>[]
     if (!user) return Response.json({ error: 'User not found' }, { status: 400 })
     if (user.role === 'inactive') return Response.json({ error: 'Inactive users cannot create expense reports' }, { status: 403 })
   }
@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
       VALUES (${expense.amount}, ${expense.category}, ${expense.vendor},
               ${expense.description}, ${expense.chargeToClient}, ${createdBy})
       RETURNING id
-    `
+    ` as unknown as Record<string, any>[]
     return Response.json({ success: true, expense_id: row.id })
   } catch (err) {
     return Response.json({ error: String(err) }, { status: 500 })
