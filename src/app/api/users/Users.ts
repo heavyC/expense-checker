@@ -1,11 +1,14 @@
 import { NextRequest } from 'next/server'
 import { getDb } from '../../../lib/db'
-const executeSql = getDb();
 
 export async function GET(request: NextRequest) {
+  const executeSql = getDb();
   const loginId = request.nextUrl.searchParams.get('loginId')
 
   try {
+    console.log('DATABASE_URL exists:', !!process.env.DATABASE_URL)
+    console.log('Request URL:', request.url)
+
     if (loginId) {
       const [user] = await executeSql`
         SELECT id, first_name, last_name, login_id, role
@@ -30,6 +33,7 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  const executeSql = getDb();
   const body = await request.json()
   const { firstName, lastName, loginId, role } = body
 
