@@ -1,5 +1,6 @@
 import { NextRequest } from 'next/server'
-import { executeSql } from '../../../lib/db'
+import { getDb } from '../../../lib/db'
+const executeSql = getDb();
 
 export async function GET() {
   try {
@@ -22,7 +23,7 @@ export async function PATCH(request: NextRequest) {
   }
 
   try {
-    const [row] = await executeSql`
+    const row = await executeSql`
       UPDATE prompts
       SET body = ${body}, version = version + 1, updated_at = NOW()
       WHERE name = ${name} AND is_active = TRUE

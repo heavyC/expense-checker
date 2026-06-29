@@ -1,5 +1,6 @@
 import { NextRequest } from 'next/server'
-import { executeSql } from '../../../../lib/db'
+import { getDb } from '../../../../lib/db'
+const executeSql = getDb();
 
 export async function GET(request: NextRequest) {
   const userId = request.nextUrl.searchParams.get('userId')

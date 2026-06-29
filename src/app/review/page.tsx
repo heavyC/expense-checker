@@ -1,5 +1,6 @@
-import { executeSql } from '../../lib/db'
 import ReviewPage from './ReviewPage'
+import { getDb } from '../../lib/db'
+const executeSql = getDb();
 
 export default async function Review() {
   const [expenses, adminUsers] = await Promise.all([

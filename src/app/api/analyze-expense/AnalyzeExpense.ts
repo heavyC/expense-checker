@@ -1,7 +1,9 @@
 import { NextRequest } from 'next/server'
 import { spawn } from 'child_process'
 import { join } from 'path'
-import { executeSql } from '../../../lib/db'
+// import { executeSql } from '../../../lib/db'
+import { getDb } from '../../../lib/db'
+const executeSql = getDb();
 
 export async function POST(request: NextRequest) {
   const expense = await request.json()

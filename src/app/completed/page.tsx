@@ -1,7 +1,9 @@
-import { executeSql } from '../../lib/db'
+import { getDb } from '../../lib/db'
+const executeSql = getDb();
 
 export default async function CompletedPage() {
-  const expenses = await executeSql`
+  // TODO : create a type for the Expense objects
+  const expenses  = await executeSql`
     SELECT e.id, e.amount, e.category, e.vendor, e.description,
            e.charge_to_client, e.approved_by_manager, e.submitted_at,
            u.first_name || ' ' || u.last_name AS creator_name,
@@ -15,7 +17,7 @@ export default async function CompletedPage() {
     LEFT JOIN users fr ON fr.id = e.final_review_by
     WHERE a.verdict IN ('APPROVED', 'DENIED')
     ORDER BY a.analyzed_at DESC
-  `
+  ` as unknown as Record<string, any>[];
 
   return (
     <div className="flex flex-col flex-1 bg-zinc-50 dark:bg-black">

@@ -1,5 +1,6 @@
 import { NextRequest } from 'next/server'
-import { executeSql } from '../../../../lib/db'
+import { getDb } from '../../../../lib/db'
+const executeSql = getDb();
 
 export async function GET(
   _request: NextRequest,
@@ -7,7 +8,7 @@ export async function GET(
 ) {
   const { id } = await params
   try {
-    const [row] = await executeSql`
+    const row = await executeSql`
       SELECT id, amount, category, vendor, description, charge_to_client, created_by
       FROM expenses
       WHERE id = ${parseInt(id)}

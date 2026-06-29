@@ -3,7 +3,8 @@ import { spawn } from 'child_process'
 import { join } from 'path'
 import { writeFile, unlink } from 'fs/promises'
 import { tmpdir } from 'os'
-import { executeSql } from '../../../lib/db'
+import { getDb } from '../../../lib/db'
+const executeSql = getDb();
 
 export async function POST(request: NextRequest) {
   const formData = await request.formData()

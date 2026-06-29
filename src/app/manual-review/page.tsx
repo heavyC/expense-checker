@@ -1,5 +1,7 @@
-import { executeSql } from '../../lib/db'
+// import { executeSql } from '../../lib/db'
 import ManualReviewPage from './ManualReviewPage'
+import { getDb } from '../../lib/db'
+const executeSql = getDb();
 
 export default async function ManualReview() {
   const expenses = await executeSql`

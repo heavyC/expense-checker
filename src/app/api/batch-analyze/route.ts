@@ -1,6 +1,8 @@
 import { NextRequest } from 'next/server'
-import { executeSql } from '../../../lib/db'
+// import { executeSql } from '../../../lib/db'
 import { runPython } from '../analyze-expense/AnalyzeExpense'
+import { getDb } from '../../../lib/db'
+const executeSql = getDb();
 
 export async function POST(request: NextRequest) {
   const { expense_ids } = await request.json() as { expense_ids: number[] }
@@ -17,7 +19,8 @@ export async function POST(request: NextRequest) {
         SELECT id, amount, category, vendor, description, charge_to_client, approved_by_manager
         FROM expenses
         WHERE id = ${expense_id}
-      `
+      ` as unknown as Record<string, any>[]
+      
       if (rows.length === 0) {
         results.push({ expense_id, success: false, error: 'Expense not found' })
         continue
