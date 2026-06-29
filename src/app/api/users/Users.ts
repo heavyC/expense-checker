@@ -6,8 +6,8 @@ export async function GET(request: NextRequest) {
   const loginId = request.nextUrl.searchParams.get('loginId')
 
   try {
-    console.log('DATABASE_URL exists:', !!process.env.DATABASE_URL)
-    console.log('Request URL:', request.url)
+    console.log('*** DATABASE_URL exists:', !!process.env.DATABASE_URL)
+    console.log('*** Request URL:', request.url)
 
     if (loginId) {
       const [user] = await executeSql`
@@ -27,8 +27,9 @@ export async function GET(request: NextRequest) {
     ` as unknown as Record<string, any>[]
     
     return Response.json(users)
-  } catch (err) {
-    return Response.json({ error: String(err) }, { status: 500 })
+  } catch (error) {
+    console.log("ERROR Users API Error: ", error)
+    return Response.json({ error: String(error) }, { status: 500 })
   }
 }
 
