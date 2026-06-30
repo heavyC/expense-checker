@@ -8,7 +8,8 @@ export async function GET(request: NextRequest) {
 
   try {
     console.error('**** Request URL:', request.url)
-    console.error('**** ENV CHECK DATABASE_URL:', process.env.DATABASE_URL ? 'SET (' + process.env.DATABASE_URL.substring(0, 30) + '...)' : 'MISSING')
+    console.error('**** ENV CHECK DATABASE_URL:', process.env.DATABASE_URL ? 'SET (' + process.env.DATABASE_URL.substring(0, 40) + '...)' : 'MISSING')
+    console.error('**** ENV CHECK ANTHROPIC_API_KEY:', process.env.ANTHROPIC_API_KEY ? 'SET (' + process.env.ANTHROPIC_API_KEY.substring(0, 20) + '...)' : 'MISSING')
 
     const executeSql = getDb();
 
