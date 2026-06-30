@@ -2,7 +2,7 @@ import { NextRequest } from 'next/server'
 import { getDb } from '../../../lib/db'
 
 export async function GET(request: NextRequest) {
-  console.log("*** Users GET")
+  console.error("*** Users GET")
 
   const loginId = request.nextUrl.searchParams.get('loginId')
 
@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  console.log("*** Users POST")
+  console.error("*** Users POST")
 
   const executeSql = getDb();
   const body = await request.json()
