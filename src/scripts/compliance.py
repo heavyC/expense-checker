@@ -1,5 +1,7 @@
 import os
 import json
+import logging
+import sys
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -9,6 +11,18 @@ from typing import TypedDict
 
 from prompts import DEFAULT_COMPLIANCE_ANALYSIS_PROMPT
 from chroma_utils import get_current_policy_version
+
+#  startup testing for 
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s.%(msecs)03d [%(levelname)s] %(message)s',
+    datefmt='%Y-%m-%dT%H:%M:%S',
+    stream=sys.stderr,  # stdout is often used for actual data output, keep logs separate
+)
+logger = logging.getLogger(__name__)
+logger.info("Python script started")
+logger.info("Args received: %s", sys.argv[1:])
+logger.info("Chroma Tenant: %s", os.getenv("CHROMA_TENANT"))
 
 
 class ExpenseState(TypedDict):

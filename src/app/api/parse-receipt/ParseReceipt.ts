@@ -58,13 +58,22 @@ export async function POST(request: NextRequest) {
 
 export function runPython(imagePath: string, prompt: string | null = null): Promise<string> {
   return new Promise((resolve, reject) => {
-    const proc = spawn('python3', ['-c', `
-import sys, json
-sys.path.insert(0, '${join(process.cwd(), 'src', 'scripts')}')
-from parse_receipt import parse_receipt
-payload = json.loads(sys.stdin.read())
-print(json.dumps(parse_receipt(payload['image_path'], payload.get('prompt'))))
-`])
+    const proc = spawn('python3', 
+      ['-c', 
+        `import sys, json
+         sys.path.insert(0, '${join(process.cwd(), 'src', 'scripts')}')
+         from parse_receipt import parse_receipt
+         payload = json.loads(sys.stdin.read())
+         print(json.dumps(parse_receipt(payload['image_path'], payload.get('prompt'))))
+      `],
+      { env: { ...process.env, 
+        DATABASE_URL: process.env.DATABASE_URL,
+        ANTHROPIC_API_KEY: process.env.ANTHROPIC_API_KEY,
+        CHROMA_API_KEY: process.env.CHROMA_API_KEY,
+        CHROMA_TENANT: process.env.CHROMA_TENANT,
+        CHROMA_DATABASE: process.env.CHROMA_DATABASE,
+      } }
+)
 
     let stdout = ''
     let stderr = ''
