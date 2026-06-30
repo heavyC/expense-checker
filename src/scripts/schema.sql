@@ -41,7 +41,7 @@ CREATE TABLE users (
 );
 
 
--- Compliance analysis output produced by analyzeExpense() in compliance.py.
+-- Compliance analysis output produced by analyzeExpense()
 CREATE TABLE expense_analyses (
     id               SERIAL        PRIMARY KEY,
     expense_id       INTEGER       NOT NULL REFERENCES expenses(id) ON DELETE CASCADE,

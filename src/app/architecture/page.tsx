@@ -60,7 +60,8 @@ export default function ArchitecturePage() {
         <Section title="Compliance Agent">
           <p>
             Written in <strong>Python</strong> (<code>src/scripts/compliance.py</code>). The Next.js API spawns a
-            short-lived Python subprocess per expense and reads the JSON result from stdout.
+            short-lived Python subprocess per expense and reads the JSON result from stdout.<br />
+            <b>Update:</b> this has all been transcoded to typescript
           </p>
           <ol className="flex flex-col gap-3 mt-1 list-none">
             <AgentStep n={1} title="RAG retrieval">
