@@ -17,16 +17,11 @@ export async function parseReceipt(
   mediaType: 'image/jpeg' | 'image/png' | 'image/gif' | 'image/webp',
   prompt?: string | null
 ): Promise<ParsedReceipt> {
-  
-console.log("*** parseReceipt env.apikey: ", process.env.ANTHROPIC_API_KEY ? process.env.ANTHROPIC_API_KEY.substring(0, 20) : "null");
-// console.log("*** parseReceipt apikey: ", ANTHROPIC_API_KEY ? process.env.ANTHROPIC_API_KEY.substring(0, 20) : "null");
-
   const apiKey = process.env.ANTHROPIC_API_KEY
   if (!apiKey) throw new Error('ANTHROPIC_API_KEY is not set')  // clear error message
 
   const imageB64 = imageBuffer.toString('base64')
   const anthropicClient = new Anthropic({ apiKey })  // ← pass explicitly
-  // const anthropicClient = new Anthropic()
   
   const response = await anthropicClient.messages.create({
     model: 'claude-opus-4-8',
