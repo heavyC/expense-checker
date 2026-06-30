@@ -19,7 +19,6 @@ let _sql: ReturnType<typeof neon> | null = null;
 export function getDb() {
   // Don't cache in serverless - create fresh each time
   const url = process.env.DATABASE_URL;
-  console.error("*** getDb database_url: ", process.env.DATABASE_URL)
   if (!url) throw new Error('at db.ts DATABASE_URL is not set');
   return neon(url);  // ← Remove caching (_sql)
 }
