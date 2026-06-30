@@ -26,6 +26,7 @@ export async function POST(request: NextRequest) {
     if (user.role === 'inactive') return Response.json({ error: 'Inactive users cannot create expense reports' }, { status: 403 })
   }
 
+  let result: any = null;
   try {
     const buffer = Buffer.from(await file.arrayBuffer())
 
@@ -34,8 +35,13 @@ export async function POST(request: NextRequest) {
     ` as unknown as Record<string, any>[]
     const prompt = promptRow?.body ?? null
 
-    const result = await parseReceipt(buffer, file.type as AllowedMediaType, prompt)
+    result = await parseReceipt(buffer, file.type as AllowedMediaType, prompt)
+  } catch (err) {
+    console.error("*** ERROR1 in ParseReceipts: ", err)
+    return Response.json({ error: String(err) }, { status: 500 })
+  }
 
+  try {
     const [row] = await executeSql`
       INSERT INTO expenses (amount, category, vendor, description, charge_to_client, receipt_accuracy, created_by)
       VALUES (${result.amount}, ${result.category}, ${result.vendor},
@@ -45,7 +51,7 @@ export async function POST(request: NextRequest) {
 
     return Response.json({ success: true, result, fileName: file.name, expense_id: row.id })
   } catch (err) {
-    console.error("*** ERROR in ParseReceipts: ", err)
+    console.error("*** ERROR2 in ParseReceipts: ", err)
     return Response.json({ error: String(err) }, { status: 500 })
   }
 }
