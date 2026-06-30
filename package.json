@@ -8,10 +8,10 @@
     "start": "next start",
     "lint": "eslint",
     "type-check": "tsc --noEmit",
-    "type-check:watch": "tsc --noEmit -w"
+    "type-check:watch": "tsc --noEmit -w",
+    "postinstall": "patch-package"
   },
   "dependencies": {
-    "@chroma-core/default-embed": "^0.1.9",
     "@langchain/community": "^1.1.29",
     "@langchain/core": "^1.1.48",
     "@langchain/langgraph": "^1.4.0",
@@ -35,11 +35,11 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.3.3",
+    "patch-package": "^8.0.1",
     "tailwindcss": "^4",
     "typescript": "^5"
   },
   "allowScripts": {
-    "@chroma-core/default-embed@0.1.9": true,
     "onnxruntime-node@1.21.0": true,
     "unrs-resolver@1.12.2": true,
     "protobufjs@7.6.4": true
