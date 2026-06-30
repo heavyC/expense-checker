@@ -1,0 +1,21 @@
+version: 1
+frontend:
+    phases:
+        preBuild:
+            commands:
+                - npm ci --cache .npm --prefer-offline
+        build:
+            commands:
+                - echo "Running from YML file..."
+                - npm run build
+                - if [ -z "$DATABASE_URL" ]; then echo "DATABASE_URL MISSING"; else echo "DATABASE_URL present"; fi
+                - if [ -z "$CHROMA_API_KEY" ]; then echo "CHROMA_API_KEY MISSING"; else echo "CHROMA_API_KEY present"; fi
+                - if [ -z "$ANTHROPIC_API_KEY" ]; then echo "ANTHROPIC_API_KEY MISSING"; else echo "ANTHROPIC_API_KEY present"; fi
+    artifacts:
+        baseDirectory: .next
+        files:
+            - "**/*"
+    cache:
+        paths:
+            - .next/cache/**/*
+            - .npm/**/*
