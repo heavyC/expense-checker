@@ -8,8 +8,8 @@ export async function GET(request: NextRequest) {
 
   try {
     const executeSql = getDb();
-    console.log('*** DATABASE_URL exists:', !!process.env.DATABASE_URL)
-    console.log('*** Request URL:', request.url)
+    console.error('*** DATABASE_URL exists:', !!process.env.DATABASE_URL)
+    console.error('*** Request URL:', request.url)
 
     if (loginId) {
       const [user] = await executeSql`
@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
     
     return Response.json(users)
   } catch (error) {
-    console.log("ERROR Users API Error: ", error)
+    console.error("ERROR Users API Error: ", error)
     return Response.json({ error: String(error) }, { status: 500 })
   }
 }
