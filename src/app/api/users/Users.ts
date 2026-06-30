@@ -2,10 +2,12 @@ import { NextRequest } from 'next/server'
 import { getDb } from '../../../lib/db'
 
 export async function GET(request: NextRequest) {
-  const executeSql = getDb();
+  console.log("*** Users GET")
+
   const loginId = request.nextUrl.searchParams.get('loginId')
 
   try {
+    const executeSql = getDb();
     console.log('*** DATABASE_URL exists:', !!process.env.DATABASE_URL)
     console.log('*** Request URL:', request.url)
 
@@ -34,6 +36,8 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  console.log("*** Users POST")
+
   const executeSql = getDb();
   const body = await request.json()
   const { firstName, lastName, loginId, role } = body
