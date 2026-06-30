@@ -7,18 +7,18 @@ import { neon } from '@neondatabase/serverless';
 
 let _sql: ReturnType<typeof neon> | null = null;
 
-// export function getDb() {
-//   if (!_sql) {
-//     const url = process.env.DATABASE_URL;
-//     if (!url) throw new Error('DATABASE_URL is not set');
-//     _sql = neon(url);
-//   }
-//   return _sql;
-// }
-
 export function getDb() {
-  // Don't cache in serverless - create fresh each time
-  const url = process.env.DATABASE_URL;
-  if (!url) throw new Error('at db.ts DATABASE_URL is not set');
-  return neon(url);  // ← Remove caching (_sql)
+  if (!_sql) {
+    const url = process.env.DATABASE_URL;
+    if (!url) throw new Error('DATABASE_URL is not set');
+    _sql = neon(url);
+  }
+  return _sql;
 }
+
+// // Don't cache in serverless - create fresh each time
+// export function getDb() {
+//   const url = process.env.DATABASE_URL;
+//   if (!url) throw new Error('at db.ts DATABASE_URL is not set');
+//   return neon(url);  // ← Remove caching (_sql)
+// }
