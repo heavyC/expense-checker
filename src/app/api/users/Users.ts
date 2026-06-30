@@ -7,10 +7,11 @@ export async function GET(request: NextRequest) {
   const loginId = request.nextUrl.searchParams.get('loginId')
 
   try {
-    console.error('*** DATABASE_URL exists:', !!process.env.DATABASE_URL)
+    console.error('*** DATABASE_URL:', process.env.DATABASE_URL)
     console.error('*** Request URL:', request.url)
     
     const executeSql = getDb();
+    console.error('*** executeSql:', executeSql)
 
     if (loginId) {
       const [user] = await executeSql`
