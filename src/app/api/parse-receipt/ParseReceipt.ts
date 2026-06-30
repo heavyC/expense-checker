@@ -12,6 +12,13 @@ export async function POST(request: NextRequest) {
   const file = formData.get('receipt') as File | null
   const createdBy = formData.get('created_by') ? parseInt(formData.get('created_by') as string) : null
 
+    console.error('**** ParseReceipt Request URL:', request.url)
+    console.error('**** ParseReceipt ENV CHECK DATABASE_URL:', process.env.DATABASE_URL ? 'SET (' + process.env.DATABASE_URL.substring(0, 40) + '...)' : 'MISSING')
+    console.error('**** ParseReceipt ENV CHECK ANTHROPIC_API_KEY:', process.env.ANTHROPIC_API_KEY ? 'SET (' + process.env.ANTHROPIC_API_KEY.substring(0, 20) + '...)' : 'MISSING')
+    console.error('**** ParseReceipt ENV CHECK CHROMA_API_KEY:', process.env.CHROMA_API_KEY ? 'SET (' + process.env.CHROMA_API_KEY.substring(0, 20) + '...)' : 'MISSING')
+
+
+
   if (!file) {
     return Response.json({ error: 'No receipt image provided' }, { status: 400 })
   }
