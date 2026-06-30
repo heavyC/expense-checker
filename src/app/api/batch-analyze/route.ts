@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server'
-// import { executeSql } from '../../../lib/db'
-import { runPython } from '../analyze-expense/AnalyzeExpense'
+import { analyzeExpense } from '../../../lib/compliance'
 import { getDb } from '../../../lib/db'
+
 const executeSql = getDb();
 
 export async function POST(request: NextRequest) {
@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
         FROM expenses
         WHERE id = ${expense_id}
       ` as unknown as Record<string, any>[]
-      
+
       if (rows.length === 0) {
         results.push({ expense_id, success: false, error: 'Expense not found' })
         continue
@@ -36,8 +36,7 @@ export async function POST(request: NextRequest) {
         approvedByManager: row.approved_by_manager,
       }
 
-      const raw = await runPython(expense)
-      const result = JSON.parse(raw)
+      const result = await analyzeExpense(expense)
 
       await executeSql`
         INSERT INTO expense_analyses

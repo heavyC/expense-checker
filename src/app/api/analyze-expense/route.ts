@@ -1,2 +1,2 @@
-import { POST, runPython } from "./AnalyzeExpense"
-export { POST, runPython }
+import { POST } from "./AnalyzeExpense"
+export { POST }

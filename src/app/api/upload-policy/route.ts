@@ -1,2 +1,2 @@
-import { POST, runPython } from "./UploadPolicyRoute"
-export { POST, runPython }
+import { POST } from "./UploadPolicyRoute"
+export { POST }

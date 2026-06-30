@@ -8,6 +8,8 @@ export async function GET(request: NextRequest) {
 
   try {
     console.error('*** Request URL:', request.url)
+    console.error('*** ENV CHECK DATABASE_URL:', process.env.DATABASE_URL ? 'SET (' + process.env.DATABASE_URL.substring(0, 30) + '...)' : 'MISSING')
+
     const executeSql = getDb();
 
     if (loginId) {

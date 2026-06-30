@@ -1,2 +1,2 @@
-import { POST, runPython } from './ParseReceipt'
-export { POST, runPython } 
+import { POST } from './ParseReceipt'
+export { POST }

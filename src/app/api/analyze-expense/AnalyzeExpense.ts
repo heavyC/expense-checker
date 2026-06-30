@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server'
-import { spawn } from 'child_process'
-import { join } from 'path'
 import { getDb } from '../../../lib/db'
+import { analyzeExpense } from '../../../lib/compliance'
+
 const executeSql = getDb();
 
 export async function POST(request: NextRequest) {
@@ -20,13 +20,7 @@ export async function POST(request: NextRequest) {
     ` as unknown as Record<string, any>[]
     if (promptRow) expense._prompt = promptRow.body
 
-    const raw = await runPython(expense)
-    let result: Record<string, unknown>
-    try {
-      result = JSON.parse(raw)
-    } catch {
-      return Response.json({ error: 'Failed to parse analysis output' }, { status: 500 })
-    }
+    const result = await analyzeExpense(expense)
 
     let expenseId: number = expense.expense_id as number
     if (!expenseId) {
@@ -36,7 +30,6 @@ export async function POST(request: NextRequest) {
                 ${expense.description}, ${expense.chargeToClient})
         RETURNING id
       ` as unknown as Record<string, any>[]
-      
       expenseId = row.id
     }
 
@@ -58,32 +51,4 @@ export async function POST(request: NextRequest) {
   } catch (err) {
     return Response.json({ error: String(err) }, { status: 500 })
   }
-}
-
-export function runPython(expense: Record<string, unknown>): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const proc = spawn('python3', ['-c', `
-import sys, json
-sys.path.insert(0, '${join(process.cwd(), 'src', 'scripts')}')
-from compliance import analyzeExpense
-expense = json.loads(sys.stdin.read())
-print(json.dumps(analyzeExpense(expense)))
-`])
-
-    let stdout = ''
-    let stderr = ''
-
-    proc.stdout.on('data', (d: Buffer) => { stdout += d.toString() })
-    proc.stderr.on('data', (d: Buffer) => { stderr += d.toString() })
-    proc.stdin.write(JSON.stringify(expense))
-    proc.stdin.end()
-
-    proc.on('close', (code) => {
-      if (code === 0) {
-        resolve(stdout.trim())
-      } else {
-        reject(stderr.trim() || `Process exited with code ${code}`)
-      }
-    })
-  })
 }

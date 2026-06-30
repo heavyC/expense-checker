@@ -1,10 +1,11 @@
 import { NextRequest } from 'next/server'
-import { spawn } from 'child_process'
-import { join } from 'path'
-import { writeFile, unlink } from 'fs/promises'
-import { tmpdir } from 'os'
 import { getDb } from '../../../lib/db'
+import { parseReceipt } from '../../../lib/parseReceipt'
+
 const executeSql = getDb();
+
+type AllowedMediaType = 'image/jpeg' | 'image/png' | 'image/gif' | 'image/webp'
+const ALLOWED_TYPES: AllowedMediaType[] = ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
 
 export async function POST(request: NextRequest) {
   const formData = await request.formData()
@@ -15,31 +16,25 @@ export async function POST(request: NextRequest) {
     return Response.json({ error: 'No receipt image provided' }, { status: 400 })
   }
 
-  const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
-  if (!allowedTypes.includes(file.type)) {
+  if (!ALLOWED_TYPES.includes(file.type as AllowedMediaType)) {
     return Response.json({ error: 'Unsupported image type. Use JPEG, PNG, GIF, or WebP.' }, { status: 400 })
   }
 
-  const ext = file.name.split('.').pop() ?? 'jpg'
-  const tmpPath = join(tmpdir(), `receipt-${Date.now()}.${ext}`)
-
   if (createdBy) {
-    const [user] = await executeSql`SELECT role FROM users WHERE id = ${createdBy}`  as unknown as Record<string, any>[]
+    const [user] = await executeSql`SELECT role FROM users WHERE id = ${createdBy}` as unknown as Record<string, any>[]
     if (!user) return Response.json({ error: 'User not found' }, { status: 400 })
     if (user.role === 'inactive') return Response.json({ error: 'Inactive users cannot create expense reports' }, { status: 403 })
   }
 
   try {
     const buffer = Buffer.from(await file.arrayBuffer())
-    await writeFile(tmpPath, buffer)
 
     const [promptRow] = await executeSql`
       SELECT body FROM prompts WHERE name = 'receipt_parsing' AND is_active = TRUE
     ` as unknown as Record<string, any>[]
     const prompt = promptRow?.body ?? null
 
-    const raw = await runPython(tmpPath, prompt)
-    const result = JSON.parse(raw)
+    const result = await parseReceipt(buffer, file.type as AllowedMediaType, prompt)
 
     const [row] = await executeSql`
       INSERT INTO expenses (amount, category, vendor, description, charge_to_client, receipt_accuracy, created_by)
@@ -51,41 +46,5 @@ export async function POST(request: NextRequest) {
     return Response.json({ success: true, result, fileName: file.name, expense_id: row.id })
   } catch (err) {
     return Response.json({ error: String(err) }, { status: 500 })
-  } finally {
-    unlink(tmpPath).catch(() => {})
   }
-}
-
-export function runPython(imagePath: string, prompt: string | null = null): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const proc = spawn('python3', 
-      ['-c', 
-        `import sys, json
-         sys.path.insert(0, '${join(process.cwd(), 'src', 'scripts')}')
-         from parse_receipt import parse_receipt
-         payload = json.loads(sys.stdin.read())
-         print(json.dumps(parse_receipt(payload['image_path'], payload.get('prompt'))))
-      `],
-      { env: { ...process.env, 
-        DATABASE_URL: process.env.DATABASE_URL,
-        ANTHROPIC_API_KEY: process.env.ANTHROPIC_API_KEY,
-        CHROMA_API_KEY: process.env.CHROMA_API_KEY,
-        CHROMA_TENANT: process.env.CHROMA_TENANT,
-        CHROMA_DATABASE: process.env.CHROMA_DATABASE,
-      } }
-)
-
-    let stdout = ''
-    let stderr = ''
-
-    proc.stdout.on('data', (d: Buffer) => { stdout += d.toString() })
-    proc.stderr.on('data', (d: Buffer) => { stderr += d.toString() })
-    proc.stdin.write(JSON.stringify({ image_path: imagePath, prompt }))
-    proc.stdin.end()
-
-    proc.on('close', (code) => {
-      if (code === 0) resolve(stdout.trim())
-      else reject(stderr.trim() || `Process exited with code ${code}`)
-    })
-  })
 }
