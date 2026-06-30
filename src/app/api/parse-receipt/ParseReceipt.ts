@@ -45,6 +45,7 @@ export async function POST(request: NextRequest) {
 
     return Response.json({ success: true, result, fileName: file.name, expense_id: row.id })
   } catch (err) {
+    console.error("*** ERROR in ParseReceipts: ", err)
     return Response.json({ error: String(err) }, { status: 500 })
   }
 }
