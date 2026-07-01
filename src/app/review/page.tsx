@@ -1,8 +1,12 @@
 import ReviewPage from './ReviewPage'
 import { getDb } from '../../lib/db'
+import { unstable_noStore as noStore } from 'next/cache'
+
 const executeSql = getDb();
 
 export default async function Review() {
+  noStore() // block caching
+
   const [expenses, adminUsers] = await Promise.all([
     executeSql`
       SELECT e.id, e.amount, e.category, e.vendor, e.description,
