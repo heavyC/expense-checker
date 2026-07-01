@@ -19,8 +19,8 @@ export default async function Review() {
     ` as unknown as Record<string, any>[],
   ])
 
-console.error("*** ReviewPage.page.tsx expenses:  ", expenses)
-console.error("*** ReviewPage.page.tsx adminUsers:  ", adminUsers)
+// console.error("*** ReviewPage.page.tsx expenses:  ", expenses)
+// console.error("*** ReviewPage.page.tsx adminUsers:  ", adminUsers)
 
 
   return (
@@ -28,7 +28,7 @@ console.error("*** ReviewPage.page.tsx adminUsers:  ", adminUsers)
       <main className="w-full max-w-4xl mx-auto py-12 px-6 flex flex-col gap-6">
         <div className="flex flex-col gap-1">
           <h1 className="text-3xl font-semibold tracking-tight text-black dark:text-white">
-            Ready for Compliance Check
+            xReady for Compliance Check
           </h1>
           <p className="text-sm text-zinc-500">
             Expenses waiting for compliance analysis. Select the ones you want to submit.
