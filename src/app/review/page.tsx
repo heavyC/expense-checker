@@ -19,6 +19,10 @@ export default async function Review() {
     ` as unknown as Record<string, any>[],
   ])
 
+console.error("*** ReviewPage expenses:  ", expenses)
+console.error("*** ReviewPage adminUsers:  ", adminUsers)
+
+
   return (
     <div className="flex flex-col flex-1 bg-zinc-50 dark:bg-black">
       <main className="w-full max-w-4xl mx-auto py-12 px-6 flex flex-col gap-6">
