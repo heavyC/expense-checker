@@ -19,8 +19,8 @@ export default async function Review() {
     ` as unknown as Record<string, any>[],
   ])
 
-// console.error("*** ReviewPage.page.tsx expenses:  ", expenses)
-// console.error("*** ReviewPage.page.tsx adminUsers:  ", adminUsers)
+console.error("*** ReviewPage.page.tsx expenses:  ", expenses)
+console.error("*** ReviewPage.page.tsx adminUsers:  ", adminUsers)
 
 
   return (
