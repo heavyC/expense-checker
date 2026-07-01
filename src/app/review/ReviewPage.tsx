@@ -35,6 +35,10 @@ export default function ReviewPage({ expenses, adminUsers }: { expenses: Pending
     Object.fromEntries(expenses.map(e => [e.id, e.approved_by]))
   )
 
+console.error("*** ReviewPage expenses:  ", expenses)
+console.error("*** ReviewPage adminUsers:  ", adminUsers)
+
+
   async function toggleManagerApproval(id: number, value: boolean) {
     const approverId = value ? (currentUser?.id ?? null) : null
     setManagerApproved(prev => ({ ...prev, [id]: value }))
